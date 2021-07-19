@@ -6,23 +6,19 @@ using UnityEngine.SceneManagement;
 public class Scenectrl : MonoBehaviour
 {
 
-    public void btn_back_creditos()
-    {
+    public void btn_back_creditos() {
         SceneManager.LoadScene("carga");
     }
 
-    public void btn_cerrar_carga()
-    {
+    public void btn_cerrar_carga() {
         SceneManager.LoadScene("espol");
     }
 
-    public void btn_info_carga()
-    {
+    public void btn_info_carga() {
         SceneManager.LoadScene("creditos");
     }
 
-    public void btn_play()
-    {
+    public void btn_play() {
         SceneManager.LoadScene("MenuPersonajes");
     }
 
@@ -32,6 +28,14 @@ public class Scenectrl : MonoBehaviour
 
     public void btn_back_pintado() {
         SceneManager.LoadScene("MenuVersionesPersonajes");
+    }
+
+    public void btn_selected_character() {
+        SceneManager.LoadScene("MenuVersionesPersonajes");
+    }
+
+    public void btn_selected_version() {
+        SceneManager.LoadScene("MLienzoPersonajes");
     }
 
   

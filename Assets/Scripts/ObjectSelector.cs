@@ -18,20 +18,8 @@ public class ObjectSelector : MonoBehaviour
         personaje.Add(GameObject.Find("8"));
         personaje.Add(GameObject.Find("9"));
 
-        foreach(GameObject lienzo in personaje) 
-        {
-            lienzo.SetActive(false);
-        }
-
-
-
-        //aqui se supone que se debe de cargar los elementos a la base local 
-
-        //con la cantidad de personajes se activa la opcion de personajes
-        cargarlienzos(3);
-        //luego de que se carga los lienzos con las imagenes de referencia
-
-
+        borrar_lienzos();
+        cargarlienzos(4);
     }
 
     private void cargarlienzos(int cant)
@@ -39,5 +27,11 @@ public class ObjectSelector : MonoBehaviour
         personaje[cant-1].SetActive(true);
     }
 
-    
+    private void borrar_lienzos() {
+        foreach (GameObject lienzo in personaje)
+        {
+            lienzo.SetActive(false);
+        }
+    }
+
 }
