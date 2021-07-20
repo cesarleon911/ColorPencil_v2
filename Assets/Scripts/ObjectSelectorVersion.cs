@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectSelector : MonoBehaviour
+public class ObjectSelectorVersion : MonoBehaviour
 {
     public List<GameObject> personaje;
 
@@ -19,19 +19,19 @@ public class ObjectSelector : MonoBehaviour
         personaje.Add(GameObject.Find("9"));
 
         borrar_lienzos();
-        cargarlienzos(DataJoin.instance.Npersonajes());
+        cargarlienzos(DataJoin.instance.Nversiones(DataJoin.instance.GetIndexPer()));
     }
 
     private void cargarlienzos(int cant)
     {
-        personaje[cant-1].SetActive(true);
+        personaje[cant - 1].SetActive(true);
     }
 
-    private void borrar_lienzos() {
+    private void borrar_lienzos()
+    {
         foreach (GameObject lienzo in personaje)
         {
             lienzo.SetActive(false);
         }
     }
-
 }

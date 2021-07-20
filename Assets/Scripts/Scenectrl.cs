@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Scenectrl : MonoBehaviour
 {
-
+    
     public void btn_back_creditos() {
         SceneManager.LoadScene("carga");
     }
@@ -30,11 +30,14 @@ public class Scenectrl : MonoBehaviour
         SceneManager.LoadScene("MenuVersionesPersonajes");
     }
 
-    public void btn_selected_character() {
+    public void btn_selected_character(int op) {
+        DataJoin.instance.SetIndexPer(op);
         SceneManager.LoadScene("MenuVersionesPersonajes");
     }
 
-    public void btn_selected_version() {
+    public void btn_selected_version(int op) {
+        DataJoin.instance.SetIndexVer(op);
+        print("personaje: " + DataJoin.instance.GetIndexPer() + "version: " + DataJoin.instance.GetIndexVer());
         SceneManager.LoadScene("MLienzoPersonajes");
     }
 
