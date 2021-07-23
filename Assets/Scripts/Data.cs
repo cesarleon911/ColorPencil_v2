@@ -39,14 +39,22 @@ public class Personajes
         return this.nombre;
     }
 
-    public List<Versiones> Getversiones() {
-        return this.versiones;
+    public List<Versiones> Getversiones()
+    {
+        return versiones;
+    }
+
+    public Versiones Getversion(int index) {
+        return versiones[index-1];
     }
 
     public int GetNVersiones() {
         return this.versiones.Count;
     }
 
+    public string getURL() {
+        return URL_ref;
+    }
     //getters and setters
 
 }
@@ -72,6 +80,14 @@ public class Versiones
         this.partes = partes;
     }
 
+    public int getNumPart()
+    {
+        return partes.Count;
+    }
+
+    public List<Partes> GetPartes() {
+        return partes;
+    }
     //getters and setters
     public string GetVerName() {
         return this.VerName;
@@ -86,7 +102,23 @@ public class Partes
     private string color;
     private string url;
 
+    public Partes(string idP, string namePart, string color, string url)
+    {
+        this.idP = idP;
+        this.namePart = namePart;
+        this.color = color;
+        this.url = url;
+    }
+
+
     //getters and setters
+    public string getPartName() {
+        return namePart;
+    }
+
+    public string getURL() {
+        return url;
+    }
 }
 
 public class Emociones

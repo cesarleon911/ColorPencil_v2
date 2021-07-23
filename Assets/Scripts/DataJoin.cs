@@ -31,6 +31,10 @@ public class DataJoin : MonoBehaviour
         StartCoroutine(tiempo_de_carga(15));
     }
 
+    public Data getBaseDato() {
+        return BaseDato;
+    }
+
     public int Npersonajes()
     {
         return BaseDato.personajes.Count;
@@ -92,9 +96,27 @@ public class DataJoin : MonoBehaviour
         List<Versiones> versper4 = new List<Versiones>();
         List<Versiones> versper5 = new List<Versiones>();
 
+        List<Partes> parte1 = new List<Partes>();
+        List<Partes> parte2 = new List<Partes>();
 
-        Versiones ver1 = new Versiones("ver1per1", "numero 1");
-        Versiones ver2 = new Versiones("ver2per1", "numero 2");
+        Partes part1 = new Partes("p1ver1per1", "ver 1 Parte1", "#fffff", "C:\\Users\\Stefy\\Documents\\pruebasunity\\ver11.png");
+        Partes part2 = new Partes("p1ver1per1", "ver 1 Parte2", "#fffff", "C:\\Users\\Stefy\\Documents\\pruebasunity\\ver12.png");
+        Partes part3 = new Partes("p1ver1per1", "ver 1 Parte3", "#fffff", "C:\\Users\\Stefy\\Documents\\pruebasunity\\ver13.png");
+        Partes part4 = new Partes("p1ver1per1", "ver 1 Parte4", "#fffff", "C:\\Users\\Stefy\\Documents\\pruebasunity\\ver14.png");
+        parte1.Add(part1);
+        parte1.Add(part2);
+        parte1.Add(part3);
+        parte1.Add(part4);
+
+        Partes part5 = new Partes("p1ver1per1", "ver2 Parte1", "#fffff", "C:\\Users\\Stefy\\Documents\\pruebasunity\\ver21.png");
+        Partes part6 = new Partes("p1ver1per1", "ver2 Parte2", "#fffff", "C:\\Users\\Stefy\\Documents\\pruebasunity\\ver22.png");
+        Partes part7 = new Partes("p1ver1per1", "ver2 Parte3", "#fffff", "C:\\Users\\Stefy\\Documents\\pruebasunity\\ver23.png");
+        parte2.Add(part5);
+        parte2.Add(part6);
+        parte2.Add(part7);
+
+        Versiones ver1 = new Versiones("ver1per1", "rectangulo 1", parte1);
+        Versiones ver2 = new Versiones("ver2per1", "rectangulo 2", parte2);
         versper1.Add(ver1);
         versper1.Add(ver2);
 
@@ -130,11 +152,11 @@ public class DataJoin : MonoBehaviour
 
 
 
-        Personajes personaje1 = new Personajes("FP1", "Numero 1", "C:\\Users\\Irina\\Documents\\lethoskids-master\\LethosCopy\\ColorPencilNew\\Assets\\Assets\\imagenes\\Numero\\1.png", versper1);
-        Personajes personaje2 = new Personajes("FP2", "Numero 2", "C:\\Users\\Irina\\Documents\\lethoskids-master\\LethosCopy\\ColorPencilNew\\Assets\\Assets\\imagenes\\Numero\\2.png", versper2);
-        Personajes personaje3 = new Personajes("FP3", "Numero 3", "C:\\Users\\Irina\\Documents\\lethoskids-master\\LethosCopy\\ColorPencilNew\\Assets\\Assets\\imagenes\\Numero\\3.png", versper3);
-        Personajes personaje4 = new Personajes("FP4", "Numero 4", "C:\\Users\\Irina\\Documents\\lethoskids-master\\LethosCopy\\ColorPencilNew\\Assets\\Assets\\imagenes\\Numero\\4.png", versper4);
-        Personajes personaje5 = new Personajes("FP5", "Numero 5", "C:\\Users\\Irina\\Documents\\lethoskids-master\\LethosCopy\\ColorPencilNew\\Assets\\Assets\\imagenes\\Numero\\5.png", versper5);
+        Personajes personaje1 = new Personajes("FP1", "cuadrados", "C:\\Users\\Stefy\\Documents\\pruebasunity\\rec_reference.png", versper1);
+        Personajes personaje2 = new Personajes("FP2", "Numero 2", "D:\\Unity\\ColorPencil_v2\\Assets\\Assets\\imagenes\\Numero\\2.png", versper2);
+        Personajes personaje3 = new Personajes("FP3", "Numero 3", "D:\\Unity\\ColorPencil_v2\\Assets\\Assets\\imagenes\\Numero\\3.png", versper3);
+        Personajes personaje4 = new Personajes("FP4", "Numero 4", "D:\\Unity\\ColorPencil_v2\\Assets\\Assets\\imagenes\\Numero\\4.png", versper4);
+        Personajes personaje5 = new Personajes("FP5", "Numero 5", "D:\\Unity\\ColorPencil_v2\\Assets\\Assets\\imagenes\\Numero\\5.png", versper5);
 
         figuras.Add(personaje1);
         figuras.Add(personaje2);
