@@ -57,6 +57,10 @@ public class Personajes
     }
     //getters and setters
 
+    public void SetVersiones(List<Versiones> versiones) {
+        this.versiones = versiones;
+    }
+
 }
 
 public class Versiones

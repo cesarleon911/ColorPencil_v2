@@ -45,20 +45,25 @@ public class ObjectSelectorVersion : MonoBehaviour
         foreach (Versiones ver in per.Getversiones()) {
             string btn = "lienzo" + i.ToString();
             GameObject LienzoPrincipal = GameObject.Find(btn);
-            Transform aux = LienzoPrincipal.transform;
 
+            int sort = 3;
             foreach (Partes parte in ver.GetPartes()) {
                 //aqui debo crear los lienzos añadidos 
                 GameObject obj = new GameObject();
                 obj.AddComponent<SpriteRenderer>();
+                obj.AddComponent<PolygonCollider2D>();
                 SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
-                sr.sortingOrder = 3;
+                sr.sortingOrder = sort;
+                sort++;
                 Texture2D SpriteTexture = LoadTexture(parte.getURL());
-                sr.sprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height), new Vector2(0, 0), 100.0f);
+                sr.sprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height), new Vector2(0,0), 100.0f);
 
                 //aqui me falla la wea
-                obj.transform.position = aux.position;
                 obj.transform.parent = LienzoPrincipal.transform;
+
+        
+                obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                obj.transform.localPosition = new Vector3(-2, -2, 0);
 
             }
             i++;
