@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 //se supone que este archivo es el almacenara datos adicionales
 public class Data
@@ -8,139 +8,142 @@ public class Data
     public string user;
     public List<Personajes> personajes;         // lista de personajes (0-9)
 
+    public Data()
+    {
+    }
+
+
+
     //getters and setters
 }
 
 
 public class Personajes
 {
-    private string ID;
-    private string nombre;
-    private string URL_ref;
-    private List<Versiones> versiones;
+    public int id;
+    public string nombre;
+    public string url_ref;
+    public List<Versiones> versiones; 
 
-  
-    public Personajes(string iD, string nombre, string uRL_ref, List<Versiones> versiones)
+    public Personajes()
     {
-        ID = iD;
+    }
+
+    public Personajes(int id, string nombre, string url_ref)
+    {
+        this.id = id;
         this.nombre = nombre;
-        URL_ref = uRL_ref;
-        this.versiones = versiones;
+        this.url_ref = url_ref;
+        this.versiones = new List<Versiones>();
     }
-
-    public Personajes(string iD, string nombre, string uRL_ref)
-    {
-        ID = iD;
-        this.nombre = nombre;
-        URL_ref = uRL_ref;
-    }
-
-    public string GetName() {
-        return this.nombre;
-    }
-
-    public List<Versiones> Getversiones()
-    {
-        return versiones;
-    }
-
-    public Versiones Getversion(int index) {
-        return versiones[index-1];
-    }
-
-    public int GetNVersiones() {
-        return this.versiones.Count;
-    }
-
-    public string getURL() {
-        return URL_ref;
-    }
-    //getters and setters
-
-    public void SetVersiones(List<Versiones> versiones) {
-        this.versiones = versiones;
-    }
-
 }
 
 public class Versiones
 {
-    private string idV;
-    private string VerName;
-    private List<Partes> partes;
-    private List<Emociones> emociones;
-    private List<Accesorios> accesorios;
+    public int idV;
+    public int personaid;
+    public int numVersion;
+    public List<Partes> partes;
+    public List<Emociones> emociones;
+    public List<Accesorios> accesorios;
 
-    public Versiones(string idV, string verName)
+    public Versiones()
+    {
+    }
+
+    public Versiones(int idV, int personaid, int numVersion)
     {
         this.idV = idV;
-        VerName = verName;
+        this.personaid = personaid;
+        this.numVersion = numVersion;
+        this.partes = new List<Partes>();
+        this.accesorios = new List<Accesorios>();
+        this.emociones = new List<Emociones>();
     }
-
-    public Versiones(string idV, string verName, List<Partes> partes)
-    {
-        this.idV = idV;
-        VerName = verName;
-        this.partes = partes;
-    }
-
-    public int getNumPart()
-    {
-        return partes.Count;
-    }
-
-    public List<Partes> GetPartes() {
-        return partes;
-    }
-    //getters and setters
-    public string GetVerName() {
-        return this.VerName;
-    }
-
 }
 
 public class Partes
 {
-    private string idP;
-    private string namePart;
-    private string color;
-    private string url;
+    public int idP;
+    public int numParte;
+    public string nombre;
+    public string imagen;
+    public int numVersion;
+    public int personaid;
+    public string color;
 
-    public Partes(string idP, string namePart, string color, string url)
+    public Partes()
+    {
+    }
+
+    public Partes(int idP, int numParte, string nombre, string imagen, int numVersion, int personaid, string color)
     {
         this.idP = idP;
-        this.namePart = namePart;
+        this.numParte = numParte;
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.numVersion = numVersion;
+        this.personaid = personaid;
         this.color = color;
-        this.url = url;
-    }
-
-
-    //getters and setters
-    public string getPartName() {
-        return namePart;
-    }
-
-    public string getURL() {
-        return url;
     }
 }
 
 public class Emociones
 {
-    private string idE;
-    private string nameEmo;
-    private string color;
-    private string url;
+    public int idE;
+    public int numEmo;
+    public string nombre;
+    public string imagen;
+    public int numVersion;
+    public int personaid;
+    public string color;
+
+    public Emociones()
+    {
+    }
+
+    public Emociones(int idE, int numEmo, string nombre, string imagen, int numVersion, int personaid, string color)
+    {
+        this.idE = idE;
+        this.numEmo = numEmo;
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.numVersion = numVersion;
+        this.personaid = personaid;
+        this.color = color;
+    }
+
+
 
     //getters and setters
 }
 
 public class Accesorios
 {
-    private string idA;
-    private string nameAcc;
-    private string color;
-    private string url;
+    public int idA;
+    public int numAcc;
+    public string nombre;
+    public string imagen;
+    public int numVersion;
+    public int personaid;
+    public string color;
+
+    public Accesorios()
+    {
+    }
+
+    public Accesorios(int idA, int numAcc, string nombre, string imagen, int numVersion, int personaid, string color)
+    {
+        this.idA = idA;
+        this.numAcc = numAcc;
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.numVersion = numVersion;
+        this.personaid = personaid;
+        this.color = color;
+    }
+
+
 
     //getters and setters
 }

@@ -1,0 +1,76 @@
+<%- include('partials/header') %>
+
+<ul class="nav nav-tabs navbar-dark bg-dark">
+    <li class="nav-item">
+      <a class="nav-link active" href="/usuario">Usuarios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Personajes">Personajes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Versiones">Versiones</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Partes">Partes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Accesorios">Accesorios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Emociones">Emociones</a>
+    </li>
+  </ul>
+
+
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-7">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre</th>
+                        <th>Clave</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(data) { %>
+                        <% for(var i=0;i<data.length;i++){ %>
+                            <tr>
+                                <td><%= data[i].id  %></td>
+                                <td><%= data[i].nombre  %></td>
+                                <td><%= data[i].clave  %></td>
+                                <td>
+                                    <a href="/usuariodel/<%=data[i].id%>" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                        <% } %>
+                    <% } %>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Usuarios</h1>
+
+                    <form action="/usuarioadd" method="post">
+                        <div class="form-group mt-2">
+                            <input type="text" name="nombre" placeholder="Nombre" class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
+                            <input type="password" name="clave" placeholder="Contraseña" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Save Usuario</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<%- include('partials/footer') %>
+    

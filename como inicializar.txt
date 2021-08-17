@@ -1,0 +1,25 @@
+la nueva demo de lethos consta de 2 partes
+la primera es el modelo MVC, el cual le indicara cuales son las api a la base de datos
+para inicializar dicho modelo debe de seguir los siguientes pasos
+
+requisitos:
+	1.- nodejs
+	2.- Unity3d vs 2019.1.10f1
+
+-----------------------------------------------------
+---------------- Inicilizar MVC  --------------------
+-----------------------------------------------------
+1.- copiar los archivos de "Back-End-lethos" a una carpeta cualquiera
+2.- en consola "npm init -y"
+3.- en cosnola "npm install express mysql ejs expres-myconnection morgan"
+4.- para ejecutar "npm start" o "node src/app.js"
+5.- para visualizar el servidor trabajando debera dirigirse a "localhost:4000/usuario"
+
+-----------------------------------------------------
+-------------------- Unity Game  --------------------
+-----------------------------------------------------
+1.- crear un proyecto unity2D en su version 2019.1.10f1
+2.- en el package manager debera activar los packetes -previw
+3.- debera descargar VectorGraphics para que se ejcute todo
+4.- copiar los assets del repositorio en su proyecto
+5.- ejecutar con sal y pimienta al gusto =D

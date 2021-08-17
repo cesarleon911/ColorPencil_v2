@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Unity.VectorGraphics;
 
 public class ObjectSelectorVersion : MonoBehaviour
 {
+    
     public List<GameObject> personaje;
 
     private void Start()
@@ -37,52 +39,95 @@ public class ObjectSelectorVersion : MonoBehaviour
         }
     }
 
-    private void cargar_graficos()
+    
+    public void cargar_graficos()
     {
         Personajes per = DataJoin.instance.getBaseDato().personajes[DataJoin.instance.GetIndexPer() - 1];
 
         int i = 1;
-        foreach (Versiones ver in per.Getversiones()) {
+        foreach (Versiones ver in per.versiones) {
             string btn = "lienzo" + i.ToString();
             GameObject LienzoPrincipal = GameObject.Find(btn);
+            
+            foreach (Partes parte in ver.partes) {
 
-            int sort = 3;
-            foreach (Partes parte in ver.GetPartes()) {
+                var tessOptions = new VectorUtils.TessellationOptions()
+                {
+                    StepDistance = 100.0f,
+                    MaxCordDeviation = 0.5f,
+                    MaxTanAngleDeviation = 0.1f,
+                    SamplingStepSize = 0.01f
+                };
+
+                var sceneInfo = SVGParser.ImportSVG(new StringReader(parte.imagen));
+                var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
+                
+
+
                 //aqui debo crear los lienzos añadidos 
                 GameObject obj = new GameObject();
+                
                 obj.AddComponent<SpriteRenderer>();
-                obj.AddComponent<PolygonCollider2D>();
                 SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
-                sr.sortingOrder = sort;
-                sort++;
-                Texture2D SpriteTexture = LoadTexture(parte.getURL());
-                sr.sprite = Sprite.Create(SpriteTexture, new Rect(0, 0, SpriteTexture.width, SpriteTexture.height), new Vector2(0,0), 100.0f);
+                sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
+                sr.sortingOrder = 3;
+                sr.flipY = false;
+
 
                 //aqui me falla la wea
                 obj.transform.parent = LienzoPrincipal.transform;
 
-        
-                obj.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                obj.transform.localPosition = new Vector3(-2, -2, 0);
+                obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                obj.transform.localPosition = new Vector3(-2,2.5f,0);
 
             }
             i++;
+
+
+            //esto es solo para cargar la primera emocion
+            if (ver.emociones.Count > 0) {
+                cargarcara(btn, ver.emociones[0]);
+            }
+            
         }
 
     }
 
-    private Texture2D LoadTexture(string FilePath)
-    {
-        Texture2D Tex2D;
-        byte[] FileData;
+    public void cargarcara(string btn, Emociones carita) {
 
-        if (File.Exists(FilePath))
+        GameObject LienzoPrincipal = GameObject.Find(btn);
+
+        var tessOptions = new VectorUtils.TessellationOptions()
         {
-            FileData = File.ReadAllBytes(FilePath);
-            Tex2D = new Texture2D(2, 2);
-            if (Tex2D.LoadImage(FileData))
-                return Tex2D;
-        }
-        return null;
+            StepDistance = 100.0f,
+            MaxCordDeviation = 0.5f,
+            MaxTanAngleDeviation = 0.1f,
+            SamplingStepSize = 0.01f
+        };
+
+        var sceneInfo = SVGParser.ImportSVG(new StringReader(carita.imagen));
+        var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
+
+
+
+        //aqui debo crear los lienzos añadidos 
+        GameObject obj = new GameObject();
+
+        obj.AddComponent<SpriteRenderer>();
+        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+        sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
+        sr.sortingOrder = 3;
+        sr.flipY = false;
+
+
+        //aqui me falla la wea
+        obj.transform.parent = LienzoPrincipal.transform;
+
+        obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+        obj.transform.localPosition = new Vector3(-2, 2.5f, 0);
     }
+
+
+
+
 }

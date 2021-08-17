@@ -11,7 +11,8 @@ public class Scenectrl : MonoBehaviour
     }
 
     public void btn_cerrar_carga() {
-        SceneManager.LoadScene("espol");
+        SceneManager.LoadSceneAsync("espol");
+        Application.Quit();
     }
 
     public void btn_info_carga() {
@@ -37,7 +38,6 @@ public class Scenectrl : MonoBehaviour
 
     public void btn_selected_version(int op) {
         DataJoin.instance.SetIndexVer(op);
-        print("personaje: " + DataJoin.instance.GetIndexPer() + "version: " + DataJoin.instance.GetIndexVer());
         SceneManager.LoadScene("MLienzoPersonajes");
     }
 

@@ -1,0 +1,89 @@
+<%- include('partials/header') %>
+
+<ul class="nav nav-tabs navbar-dark bg-dark">
+    <li class="nav-item">
+      <a class="nav-link" href="/usuario">Usuarios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Personajes">Personajes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Versiones">Versiones</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="/Partes">Partes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Accesorios">Accesorios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/Emociones">Emociones</a>
+    </li>
+  </ul>
+
+
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-7">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Parte N°</th>
+                        <th>Nombre</th>
+                        <th>Version</th>
+                        <th>Personaje</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(data) { %>
+                        <% for(var i=0;i<data.length;i++){ %>
+                            <tr>
+                                <td><%= data[i].idP  %></td>
+                                <td><%= data[i].numParte  %></td>
+                                <td><%= data[i].nombre  %></td>
+                                <td><%= data[i].numVersion  %></td>
+                                <td><%= data[i].personaid  %></td>
+                                <td>
+                                    <a href="/partedel/<%=data[i].idP%>" class="btn btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                        <% } %>
+                    <% } %>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Partes</h1>
+
+                    <form action="/parteadd" method="post">
+                        <div class="form-group mt-2">
+                            <input type="number" name="numParte" placeholder="Numero de Parte" class="form-control" min="1" pattern="^[0-9]+">
+                        </div>
+                        <div class="form-group mt-2">
+                            <input type="text" name="nombre" placeholder="Nombre" class="form-control">
+                        </div>
+                        <div class="form-group mt-2">
+                            <input type="number" name="numVersion" placeholder="Version" class="form-control" min="1" pattern="^[0-9]+">
+                        </div>
+                        <div class="form-group mt-2">
+                            <input type="number" name="personaid" placeholder="Personaje" class="form-control" min="1" pattern="^[0-9]+">
+                        </div>
+                        <div class="form-group mt-2">
+                            <textarea class="form-control" name="imagen" placeholder="Texto del SVG"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Save Parte</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<%- include('partials/footer') %>
+    
