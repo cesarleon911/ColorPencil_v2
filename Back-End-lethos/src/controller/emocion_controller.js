@@ -24,7 +24,7 @@ EmocionCtrl.AddEmocion = (req, res) => {
 EmocionCtrl.DelEmocion = (req, res) => {
     const id = req.params.id;    
     req.getConnection((err, conn) => {
-        conn.query('delete from Emociones where id = ?',[id] ,(err, emociones) => {
+        conn.query('delete from Emociones where idE = ?',[id] ,(err, emociones) => {
             res.redirect('/Emociones');
         });
     });

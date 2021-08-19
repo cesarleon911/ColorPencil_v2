@@ -24,7 +24,7 @@ VersionCtrl.AddVersion= (req, res) => {
 VersionCtrl.DelVersiones = (req, res) => {
     const id = req.params.id;    
     req.getConnection((err, conn) => {
-        conn.query('delete from Versiones where id = ?',[id] ,(err, versiones) => {
+        conn.query('delete from Versiones where idV = ?',[id] ,(err, versiones) => {
             res.redirect('/Versiones');
         });
     });

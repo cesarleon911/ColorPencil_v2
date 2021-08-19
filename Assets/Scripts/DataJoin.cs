@@ -223,11 +223,6 @@ public class DataJoin : MonoBehaviour
             }
         }
 
-
-        print("partes:" +partes.Count);
-        print("emociones:"+emociones.Count);
-        print("accesorios:"+accesorios.Count);
-
         this.BaseDato.user = "userofgamegenerate";
         this.BaseDato.personajes = personajes;
 

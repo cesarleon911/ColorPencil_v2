@@ -1,32 +1,99 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine.UI;
 using UnityEngine;
 using Unity.VectorGraphics;
-using System.Globalization;
 
 public class PersonajeCtrl : MonoBehaviour
 {
-    
+    public GameObject btnAcceso;
+    public GameObject btnCarita;
+    public GameObject pincel;
+
+    public GameObject colors;
+    public GameObject accesorios;
+    public GameObject emociones;
+
+    private Personajes per;
+    private Versiones ver;
+
     // Start is called before the first frame update
     void Start()
     {
+        per = DataJoin.instance.getBaseDato().personajes[DataJoin.instance.GetIndexPer() - 1];
+        ver = per.versiones[DataJoin.instance.GetIndexVer() - 1];
+
+        colors.SetActive(false);
+        pincel.SetActive(false);
+        accesorios.SetActive(false);
+        emociones.SetActive(false);
+        btnAcceso.SetActive(false);
+        btnCarita.SetActive(false);
+
         cargar_graficos();
+        
+    }
+
+    public void btn_brush() {
+        emociones.SetActive(false);
+        accesorios.SetActive(false);
+        colors.SetActive(true);
+        pincel.SetActive(true);
+    }
+
+    public void btn_accesorios() {
+        colors.SetActive(false);
+        emociones.SetActive(false);
+        pincel.SetActive(false);
+        accesorios.SetActive(true);
+
+        cargar_accesorios();
+    }
+
+    public void btn_emociones()
+    {
+        colors.SetActive(false);
+        emociones.SetActive(true);
+        pincel.SetActive(false);
+        accesorios.SetActive(false);
+
+        cargar_emociones();
     }
 
 
     private void cargar_graficos()
     {
-        Personajes per = DataJoin.instance.getBaseDato().personajes[DataJoin.instance.GetIndexPer() - 1];
-        Versiones ver = per.versiones[DataJoin.instance.GetIndexVer()-1];
+
+        int partes = ver.partes.Count;
+        int emociones = ver.emociones.Count;
+        int accesorios = ver.accesorios.Count;
+
+        if (partes > 0)
+        {
+            colors.SetActive(true);
+            pincel.SetActive(true);
+            cargar_partes();
+        }
+
+        if (emociones > 0 && emociones < 5) {
+            btnCarita.SetActive(true);
+        }
+
+        if (accesorios > 0 && accesorios < 5)
+        {
+            btnAcceso.SetActive(true);
+        }
+        
+
+    }
+
+    public void cargar_partes() {
 
         GameObject nombre = GameObject.Find("personaje");
         nombre.GetComponent<Text>().text = per.nombre;
 
 
         GameObject LienzoPrincipal = GameObject.Find("fondolienzo");
-    
+
         foreach (Partes parte in ver.partes)
         {
 
@@ -55,7 +122,7 @@ public class PersonajeCtrl : MonoBehaviour
 
             //aqui se agrega los poligonos
             //AddPolygonCollider2D(obj, sr.sprite, parte.imagen);
-           
+
             //aqui me falla la wea
             obj.transform.parent = LienzoPrincipal.transform;
             obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
@@ -63,11 +130,10 @@ public class PersonajeCtrl : MonoBehaviour
 
         }
 
-        if (ver.emociones.Count>0) {
+        if (ver.emociones.Count > 0)
+        {
             cargarcara("fondolienzo", ver.emociones[0]);
         }
-        
-
     }
 
     public void cargarcara(string btn, Emociones carita)
@@ -90,6 +156,8 @@ public class PersonajeCtrl : MonoBehaviour
 
         //aqui debo crear los lienzos añadidos 
         GameObject obj = new GameObject();
+        obj.name = carita.nombre;
+        obj.tag = "carita";
 
         obj.AddComponent<SpriteRenderer>();
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
@@ -105,6 +173,71 @@ public class PersonajeCtrl : MonoBehaviour
         obj.transform.localPosition = new Vector3(-2, 2.7f, 0);
     }
 
+    public void cargar_accesorios() {
+
+        int i = 1;
+        foreach (Accesorios acc in ver.accesorios)
+        {
+            string btn = "btnacc" + i.ToString();
+            GameObject obj = GameObject.Find(btn);
+
+
+            var tessOptions = new VectorUtils.TessellationOptions()
+            {
+                StepDistance = 100.0f,
+                MaxCordDeviation = 0.5f,
+                MaxTanAngleDeviation = 0.1f,
+                SamplingStepSize = 0.01f
+            };
+
+            var sceneInfo = SVGParser.ImportSVG(new StringReader(acc.imagen));
+            var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
+
+
+            //aqui debo crear los lienzos añadidos 
+            obj.AddComponent<SpriteRenderer>();
+            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+            sr.sprite = VectorUtils.BuildSprite(geoms, 1.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
+            sr.sortingOrder = 3;
+
+            obj.transform.pivot = new Vector3(-1, 2.5f, 0);
+            i++;
+        }
+
+    }
+
+    public void cargar_emociones(){
+        int i = 1;
+        foreach (Emociones emo in ver.emociones)
+        {
+            string btn = "btnemo" + i.ToString();
+            GameObject obj = GameObject.Find(btn);
+
+
+            var tessOptions = new VectorUtils.TessellationOptions()
+            {
+                StepDistance = 100.0f,
+                MaxCordDeviation = 0.5f,
+                MaxTanAngleDeviation = 0.1f,
+                SamplingStepSize = 0.01f
+            };
+
+            var sceneInfo = SVGParser.ImportSVG(new StringReader(acc.imagen));
+            var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
+
+
+            //aqui debo crear los lienzos añadidos 
+            obj.AddComponent<SpriteRenderer>();
+            SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+            sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
+            sr.sortingOrder = 3;
+
+            obj.transform.pivot = new Vector3(-5, 2.5f, 0);
+            i++;
+        }
+
+
+    }
 
     /*
     //go es el gameobject que representa la parte

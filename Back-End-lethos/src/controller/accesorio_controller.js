@@ -24,7 +24,7 @@ AccesorioCtrl.AddAccesorio = (req, res) => {
 AccesorioCtrl.DelAccesorio = (req, res) => {
     const id = req.params.id;    
     req.getConnection((err, conn) => {
-        conn.query('delete from Accesorios where id = ?',[id] ,(err, accesorios) => {
+        conn.query('delete from Accesorios where idA = ?',[id] ,(err, accesorios) => {
             res.redirect('/Accesorios');
         });
     });

@@ -24,7 +24,7 @@ PartesCtrl.AddPartes = (req, res) => {
 PartesCtrl.DelPartes = (req, res) => {
     const id = req.params.id;    
     req.getConnection((err, conn) => {
-        conn.query('delete from Partes where id = ?',[id] ,(err, partes) => {
+        conn.query('delete from Partes where idP = ?',[id] ,(err, partes) => {
             res.redirect('/Partes');
         });
     });
