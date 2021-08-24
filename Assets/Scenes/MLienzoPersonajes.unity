@@ -544,7 +544,7 @@ GameObject:
   - component: {fileID: 161869369}
   m_Layer: 0
   m_Name: color10
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -785,7 +785,7 @@ GameObject:
   - component: {fileID: 268336376}
   m_Layer: 0
   m_Name: color11
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -880,7 +880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 408bf3e3ce1d70f4995d72233431dc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: {r: 0, g: 0, b: 0, a: 0}
+  value: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &268697140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,6 +1005,7 @@ GameObject:
   m_Component:
   - component: {fileID: 464925385}
   - component: {fileID: 464925384}
+  - component: {fileID: 464925386}
   m_Layer: 0
   m_Name: brush
   m_TagString: Untagged
@@ -1075,6 +1076,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &464925386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464925383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408bf3e3ce1d70f4995d72233431dc58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: {r: 1, g: 1, b: 1, a: 0}
 --- !u!1 &664521355
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,7 +1103,7 @@ GameObject:
   - component: {fileID: 664521359}
   m_Layer: 0
   m_Name: color2
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1184,7 +1198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 408bf3e3ce1d70f4995d72233431dc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: {r: 1, g: 0.98463297, b: 0, a: 0}
+  value: {r: 1, g: 0.92, b: 0.016, a: 1}
 --- !u!1 &944975924
 GameObject:
   m_ObjectHideFlags: 0
@@ -1787,7 +1801,7 @@ GameObject:
   - component: {fileID: 1290288394}
   m_Layer: 0
   m_Name: color1
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2109,7 +2123,7 @@ GameObject:
   - component: {fileID: 1327748547}
   m_Layer: 0
   m_Name: color4
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2586,7 +2600,7 @@ GameObject:
   - component: {fileID: 1395758420}
   m_Layer: 0
   m_Name: color7
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2696,7 +2710,7 @@ GameObject:
   - component: {fileID: 1422997080}
   m_Layer: 0
   m_Name: color9
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2806,7 +2820,7 @@ GameObject:
   - component: {fileID: 1431254070}
   m_Layer: 0
   m_Name: color13
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2955,7 +2969,7 @@ GameObject:
   - component: {fileID: 1536306258}
   m_Layer: 0
   m_Name: color8
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3050,7 +3064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 408bf3e3ce1d70f4995d72233431dc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: {r: 0, g: 0.3108704, b: 1, a: 0}
+  value: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &1542902635
 GameObject:
   m_ObjectHideFlags: 0
@@ -3607,7 +3621,7 @@ GameObject:
   - component: {fileID: 1903955695}
   m_Layer: 0
   m_Name: color6
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3717,7 +3731,7 @@ GameObject:
   - component: {fileID: 1941169329}
   m_Layer: 0
   m_Name: color12
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3812,7 +3826,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 408bf3e3ce1d70f4995d72233431dc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: {r: 1, g: 0, b: 0.3766904, a: 0}
+  value: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &2003164687
 GameObject:
   m_ObjectHideFlags: 0
@@ -4037,7 +4051,7 @@ GameObject:
   - component: {fileID: 2099769162}
   m_Layer: 0
   m_Name: color14
-  m_TagString: Untagged
+  m_TagString: BrushColor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4132,4 +4146,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 408bf3e3ce1d70f4995d72233431dc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: {r: 0.011246199, g: 0.4245283, b: 0, a: 0}
+  value: {r: 0, g: 1, b: 0, a: 1}

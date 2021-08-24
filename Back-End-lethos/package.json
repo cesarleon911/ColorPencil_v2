@@ -1,7 +1,6 @@
 {
   "name": "BackEnd-lethos",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/app.js"
@@ -15,5 +14,6 @@
     "express-myconnection": "^1.0.4",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1"
-  }
+  },
+  "description": ""
 }

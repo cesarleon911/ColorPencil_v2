@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 //se supone que este archivo es el almacenara datos adicionales
 public class Data
@@ -70,13 +71,13 @@ public class Partes
     public string imagen;
     public int numVersion;
     public int personaid;
-    public string color;
+    public Color color;
 
     public Partes()
     {
     }
 
-    public Partes(int idP, int numParte, string nombre, string imagen, int numVersion, int personaid, string color)
+    public Partes(int idP, int numParte, string nombre, string imagen, int numVersion, int personaid, Color color)
     {
         this.idP = idP;
         this.numParte = numParte;

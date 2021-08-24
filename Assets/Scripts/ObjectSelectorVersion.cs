@@ -60,6 +60,8 @@ public class ObjectSelectorVersion : MonoBehaviour
                 };
 
                 var sceneInfo = SVGParser.ImportSVG(new StringReader(parte.imagen));
+                var shape = sceneInfo.NodeIDs[parte.nombre].Shapes[0];
+                shape.Fill = new SolidFill() { Color = parte.color };
                 var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
                 
 

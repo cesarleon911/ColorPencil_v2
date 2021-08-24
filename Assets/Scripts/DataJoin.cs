@@ -140,7 +140,7 @@ public class DataJoin : MonoBehaviour
 
             foreach (Partes prod in listado3)
             {
-                Partes aux = new Partes(prod.idP, prod.numParte, prod.nombre, prod.imagen, prod.numVersion, prod.personaid, "#ffffff");
+                Partes aux = new Partes(prod.idP, prod.numParte, prod.nombre, prod.imagen, prod.numVersion, prod.personaid, Color.white);
                 partes.Add(aux);
             }
             
