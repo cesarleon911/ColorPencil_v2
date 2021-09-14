@@ -6,11 +6,16 @@ using Unity.VectorGraphics;
 
 public class ObjectSelectorVersion : MonoBehaviour
 {
-    
     public List<GameObject> personaje;
+    public GameObject btn_avanza;
+    public GameObject btn_retrocede;
+    private int indice;
 
     private void Start()
     {
+        btn_avanza = GameObject.Find("btnAvanza");
+        btn_retrocede = GameObject.Find("btnRetrocede");
+
         personaje.Add(GameObject.Find("1"));
         personaje.Add(GameObject.Find("2"));
         personaje.Add(GameObject.Find("3"));
@@ -20,116 +25,132 @@ public class ObjectSelectorVersion : MonoBehaviour
         personaje.Add(GameObject.Find("7"));
         personaje.Add(GameObject.Find("8"));
         personaje.Add(GameObject.Find("9"));
+        personaje.Add(GameObject.Find("10"));
+        personaje.Add(GameObject.Find("11"));
+        personaje.Add(GameObject.Find("12"));
+        personaje.Add(GameObject.Find("13"));
+        personaje.Add(GameObject.Find("14"));
+        personaje.Add(GameObject.Find("15"));
+        personaje.Add(GameObject.Find("16"));
+        personaje.Add(GameObject.Find("17"));
+        personaje.Add(GameObject.Find("18"));
 
         borrar_lienzos();
-        cargarlienzos(DataJoin.instance.Nversiones(DataJoin.instance.GetIndexPer()));
-    }
 
-    private void cargarlienzos(int cant)
-    {
-        personaje[cant - 1].SetActive(true);
+        indice = DataJoin.instance.Nversiones(DataJoin.instance.GetIndexPer());
+        //indice = 14;
+        cargarlienzos();
         cargar_graficos();
     }
 
-    private void borrar_lienzos()
+    public void borrar_lienzos()
     {
+        btn_avanza.SetActive(false);
+        btn_retrocede.SetActive(false);
+
         foreach (GameObject lienzo in personaje)
         {
             lienzo.SetActive(false);
         }
+
+
     }
 
-    
-    public void cargar_graficos()
+    public void cargarlienzos() {
+
+        if (indice < 10)
+        {
+            personaje[indice - 1].SetActive(true);
+        }
+        else
+        {
+
+            btn_avanza.SetActive(true);
+            btn_retrocede.SetActive(true);
+
+            personaje[8].SetActive(true);
+            personaje[indice - 1].SetActive(false);
+        }
+    }
+
+    public void btn_new_page(Camera main)
     {
-        Personajes per = DataJoin.instance.getBaseDato().personajes[DataJoin.instance.GetIndexPer() - 1];
+        cambiazo(main);
+    }
 
-        int i = 1;
-        foreach (Versiones ver in per.versiones) {
-            string btn = "lienzo" + i.ToString();
-            GameObject LienzoPrincipal = GameObject.Find(btn);
-            
-            foreach (Partes parte in ver.partes) {
+    public void btn_back_page(Camera main)
+    {
+        cambiazo(main);
+    }
 
-                var tessOptions = new VectorUtils.TessellationOptions()
-                {
-                    StepDistance = 100.0f,
-                    MaxCordDeviation = 0.5f,
-                    MaxTanAngleDeviation = 0.1f,
-                    SamplingStepSize = 0.01f
-                };
-
-                var sceneInfo = SVGParser.ImportSVG(new StringReader(parte.imagen));
-                var shape = sceneInfo.NodeIDs[parte.nombre].Shapes[0];
-                shape.Fill = new SolidFill() { Color = parte.color };
-                var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
-                
-
-
-                //aqui debo crear los lienzos añadidos 
-                GameObject obj = new GameObject();
-                
-                obj.AddComponent<SpriteRenderer>();
-                SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
-                sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
-                sr.sortingOrder = 3;
-                sr.flipY = false;
-
-
-                //aqui me falla la wea
-                obj.transform.parent = LienzoPrincipal.transform;
-
-                obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-                obj.transform.localPosition = new Vector3(-2,2.5f,0);
-
-            }
-            i++;
-
-
-            //esto es solo para cargar la primera emocion
-            if (ver.emociones.Count > 0) {
-                cargarcara(btn, ver.emociones[0]);
-            }
-            
+    public void cambiazo(Camera main)
+    {
+        Vector3 aux = main.transform.position;
+        if (aux.x > 0)
+        {
+            aux.x = 0;
+            personaje[8].SetActive(true);
+            personaje[indice - 1].SetActive(false);
+        }
+        else if (aux.x == 0)
+        {
+            aux.x = 18.5f;
+            personaje[8].SetActive(false);
+            personaje[indice - 1].SetActive(true);
         }
 
+        main.transform.position = aux;
+
     }
 
-    public void cargarcara(string btn, Emociones carita) {
+    public void cargar_graficos() {
+        Personajes per = DataJoin.instance.getBaseDato().data[DataJoin.instance.GetIndexPer() - 1];
+        int i = 1;
 
-        GameObject LienzoPrincipal = GameObject.Find(btn);
+        foreach (Versiones ver in per.graphic_lines) {
+            if (ver.graphic_line_parts.Count != 0) {
+                string btn = "lienzo" + i.ToString();
+                GameObject LienzoPrincipal = GameObject.Find(btn);
 
-        var tessOptions = new VectorUtils.TessellationOptions()
-        {
-            StepDistance = 100.0f,
-            MaxCordDeviation = 0.5f,
-            MaxTanAngleDeviation = 0.1f,
-            SamplingStepSize = 0.01f
-        };
+                foreach (Partes parte in ver.graphic_line_parts) {
 
-        var sceneInfo = SVGParser.ImportSVG(new StringReader(carita.imagen));
-        var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
+                    var tessOptions = new VectorUtils.TessellationOptions()
+                    {
+                        StepDistance = 100.0f,
+                        MaxCordDeviation = 0.5f,
+                        MaxTanAngleDeviation = 0.1f,
+                        SamplingStepSize = 0.01f
+                    };
 
+                    var sceneInfo = SVGParser.ImportSVG(new StringReader(parte.part_svg));
+                    var shape = sceneInfo.NodeIDs[parte.part_name].Shapes[0];
+                    if ((SolidFill)sceneInfo.NodeIDs[parte.part_name].Shapes[0].Fill == null)
+                    {
+                        shape.Fill = new SolidFill() { Color = parte.color };
+                    }
 
-
-        //aqui debo crear los lienzos añadidos 
-        GameObject obj = new GameObject();
-
-        obj.AddComponent<SpriteRenderer>();
-        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
-        sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
-        sr.sortingOrder = 3;
-        sr.flipY = false;
+                    var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
 
 
-        //aqui me falla la wea
-        obj.transform.parent = LienzoPrincipal.transform;
+                    GameObject obj = new GameObject();
+                    obj.AddComponent<SpriteRenderer>();
+                    SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+                    sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
+                    sr.sortingOrder = 3;
+                   
+                    sr.flipY = false;
 
-        obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-        obj.transform.localPosition = new Vector3(-2, 2.5f, 0);
+                    
+                    obj.transform.parent = LienzoPrincipal.transform;
+
+                    obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                    obj.transform.localPosition = new Vector3(-2, 2.5f, 0);
+
+                   
+                }
+            }
+            i++;
+               
+        }
     }
-
-
-
-
 }

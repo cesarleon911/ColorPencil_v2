@@ -11,7 +11,6 @@ public class Scenectrl : MonoBehaviour
     }
 
     public void btn_cerrar_carga() {
-        SceneManager.LoadSceneAsync("espol");
         Application.Quit();
     }
 
@@ -41,5 +40,7 @@ public class Scenectrl : MonoBehaviour
         SceneManager.LoadScene("MLienzoPersonajes");
     }
 
-  
+   
+
+
 }

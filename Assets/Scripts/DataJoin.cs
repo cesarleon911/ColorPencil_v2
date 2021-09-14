@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 public class DataJoin : MonoBehaviour
@@ -12,6 +13,11 @@ public class DataJoin : MonoBehaviour
     private Data BaseDato;
     private int indexPers;
     private int indexVer;
+
+    private string url = "http://207.246.65.177/api/graphic_lines/?format=json";
+    private string post_result = "";
+    private int user;
+
 
 
     private void Awake()
@@ -34,7 +40,7 @@ public class DataJoin : MonoBehaviour
 
     public int Npersonajes()
     {
-        return BaseDato.personajes.Count;
+        return BaseDato.data.Count;
     }
 
     public Data getBaseDato()
@@ -57,180 +63,98 @@ public class DataJoin : MonoBehaviour
         return indexPers;
     }
 
-    public int Nversiones(int index)
+    public string GetPostResult()
     {
-        Personajes pers = BaseDato.personajes[index-1];
-        return pers.versiones.Count;
+        return post_result;
     }
 
-    
-    public int GetIndexVer(){
+    public int Nversiones(int index)
+    {
+        Personajes pers = BaseDato.data[index - 1];
+        return pers.graphic_lines.Count;
+    }
+
+
+    public int GetIndexVer()
+    {
         return indexVer;
     }
-    
+
+    public int GetUser()
+    {
+        return user;
+    }
+
 
     IEnumerator tiempo_de_carga(int seg) {
       
-        //peticiones a las base de datos
-        string uri_per = "localhost:4000/apipersonajes";
-        string uri_ver = "localhost:4000/apiversiones";
-        string uri_par = "localhost:4000/apipartes";
-        string uri_emo = "localhost:4000/apiemociones";
-        string uri_acc = "localhost:4000/apiaccesorios";
 
-        List<Personajes> personajes = new List<Personajes>();
-        List<Versiones> versiones = new List<Versiones>();
-        List<Partes> partes = new List<Partes>();
-        List<Emociones> emociones = new List<Emociones>();
-        List<Accesorios> accesorios = new List<Accesorios>();
+        var uwr = new UnityWebRequest(url, "GET");
+        uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
 
+        yield return uwr.SendWebRequest();
 
-        //para cargar personajes
-        UnityWebRequest webRequest1 = UnityWebRequest.Get(uri_per);
-        yield return webRequest1.SendWebRequest();
-
-        if (webRequest1.isNetworkError)
+        if (uwr.isNetworkError)
         {
-            print(webRequest1.error);
+            Application.Quit();
+            Debug.Log(uwr.error);
         }
         else {
-            var listado = JsonConvert.DeserializeObject<List<Personajes>>(webRequest1.downloadHandler.text);
+            this.BaseDato = JsonConvert.DeserializeObject<Data>(uwr.downloadHandler.text);
 
-       
-            foreach (Personajes prod in listado)
-            {
-                Personajes aux = new Personajes(prod.id, prod.nombre, prod.url_ref);
-                personajes.Add(aux);
-            }
-           
+
         }
-
-        //para cargar versiones
-        UnityWebRequest webRequest2 = UnityWebRequest.Get(uri_ver);
-        yield return webRequest2.SendWebRequest();
-
-        if (webRequest2.isNetworkError)
-        {
-            print(webRequest2.error);
-        }
-        else
-        {
-            var listado2 = JsonConvert.DeserializeObject<List<Versiones>>(webRequest2.downloadHandler.text);
-
-            foreach (Versiones prod in listado2)
-            {
-                Versiones aux = new Versiones(prod.idV, prod.personaid, prod.numVersion);
-                versiones.Add(aux);
-            }
-           
-        }
-
-
-        //cargar todas las partes
-        UnityWebRequest webRequest3 = UnityWebRequest.Get(uri_par);
-        yield return webRequest3.SendWebRequest();
-
-        if (webRequest3.isNetworkError)
-        {
-            print(webRequest3.error);
-        }
-        else
-        {
-            var listado3 = JsonConvert.DeserializeObject<List<Partes>>(webRequest3.downloadHandler.text);
-
-            foreach (Partes prod in listado3)
-            {
-                Partes aux = new Partes(prod.idP, prod.numParte, prod.nombre, prod.imagen, prod.numVersion, prod.personaid, Color.white);
-                partes.Add(aux);
-            }
-            
-        }
-
-        //cargar todas las emociones
-        UnityWebRequest webRequest4 = UnityWebRequest.Get(uri_emo);
-        yield return webRequest4.SendWebRequest();
-
-        if (webRequest4.isNetworkError)
-        {
-            print(webRequest4.error);
-        }
-        else
-        {
-            var listado = JsonConvert.DeserializeObject<List<Emociones>>(webRequest4.downloadHandler.text);
-
-            foreach (Emociones prod in listado)
-            {
-                Emociones aux = new Emociones(prod.idE, prod.numEmo, prod.nombre, prod.imagen, prod.numVersion, prod.personaid, "#ffffff");
-                emociones.Add(aux);
-            }
-            
-        }
-
-        //cargar todos los accesorios
-        UnityWebRequest webRequest5 = UnityWebRequest.Get(uri_acc);
-        yield return webRequest5.SendWebRequest();
-
-        if (webRequest5.isNetworkError)
-        {
-            print(webRequest5.error);
-        }
-        else
-        {
-            var listado = JsonConvert.DeserializeObject<List<Accesorios>>(webRequest5.downloadHandler.text);
-
-            foreach (Accesorios prod in listado)
-            {
-                Accesorios aux = new Accesorios(prod.idA, prod.numAcc, prod.nombre, prod.imagen, prod.numVersion, prod.personaid, "#ffffff");
-                accesorios.Add(aux);
-            }
-            
-        }
-
-        //armar la base de datos
-        foreach (Personajes p in personajes)
-        {
-            foreach (Versiones v in versiones)
-            {
-                if (v.personaid == p.id) {
-                    p.versiones.Add(v);
-                }
-            }
-        }
-
-        foreach (Versiones v in versiones)
-        {
-            foreach (Accesorios a in accesorios)
-            {
-                if (a.personaid == v.personaid && a.numVersion == v.numVersion) {
-                    v.accesorios.Add(a);
-                }
-            }
-
-            foreach (Emociones e in emociones)
-            {
-                if (e.personaid == v.personaid && e.numVersion == v.numVersion)
-                {
-                    v.emociones.Add(e);
-                }
-            }
-
-            foreach (Partes par in partes)
-            {
-                if (par.personaid == v.personaid && par.numVersion == v.numVersion)
-                {
-                    v.partes.Add(par);
-                }
-            }
-        }
-
-        this.BaseDato.user = "userofgamegenerate";
-        this.BaseDato.personajes = personajes;
 
         yield return new WaitForSeconds(seg);
 
         //cargado de datos de los personajes
-        SceneManager.LoadScene("carga");
-    }
+        StartCoroutine(NewUser(response =>
+        {
+            post_result = response;
+            Debug.Log(post_result);
+            //JArray usuarioB = JArray.Parse(post_result);
+            JObject usuarioB = JObject.Parse(post_result);
+            this.user = (int)usuarioB["id_user"];
+            SceneManager.LoadScene("carga");
+        }));
     
+       
+    }
 
+    IEnumerator NewUser(System.Action<string> callback)
+    {
+        string deviceId = SystemInfo.deviceUniqueIdentifier;
+
+        User u = new User(deviceId);
+        string data_send = JsonConvert.SerializeObject(u);
+
+
+        var uwr = new UnityWebRequest("http://207.246.65.177/api/users/", "POST");
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(data_send);
+
+        uwr.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+        uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        uwr.SetRequestHeader("Content-Type", "application/json");
+
+        yield return uwr.SendWebRequest();
+
+        if (uwr.isNetworkError)
+        {
+            Debug.Log("Error While Sending: " + uwr.error);
+        }
+
+        callback?.Invoke(uwr.downloadHandler.text);
+    }
+
+
+}
+
+public class User
+{
+    public string device;
+
+    public User(string device)
+    {
+        this.device = device;
+    }
 }
