@@ -6,17 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/carga.unity
-    guid: 8b930b61f3f1a2d418ad492dcbf7742d
-  - enabled: 1
-    path: Assets/Scenes/creditos.unity
-    guid: 67e09d8bb5bb1de49a5e522d613deef1
-  - enabled: 1
     path: Assets/Scenes/espol.unity
     guid: 814e098a37eb14247bb20580dab81dc9
   - enabled: 1
     path: Assets/Scenes/loading.unity
     guid: 6d181d5358e076f48b7e737d9d3c1511
+  - enabled: 1
+    path: Assets/Scenes/carga.unity
+    guid: 8b930b61f3f1a2d418ad492dcbf7742d
+  - enabled: 1
+    path: Assets/Scenes/creditos.unity
+    guid: 67e09d8bb5bb1de49a5e522d613deef1
   - enabled: 1
     path: Assets/Scenes/MenuPersonajes.unity
     guid: a52c03a44d0b66249b9a1244b4e943f9

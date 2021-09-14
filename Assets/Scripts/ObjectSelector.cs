@@ -114,10 +114,8 @@ public class ObjectSelector : MonoBehaviour
             if (per.graphic_lines.Count != 0 && per.graphic_lines[0].graphic_line_parts.Count != 0)
             {
 
-
                 string btn = "lienzo" + i.ToString();
                 GameObject padre = GameObject.Find(btn);
-
 
                 UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture("http://207.246.65.177/static/media/" + per.graphic_lines[0].graphic_line_image);
                 yield return webRequest.SendWebRequest();

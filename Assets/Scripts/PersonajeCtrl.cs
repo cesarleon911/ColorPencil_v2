@@ -40,17 +40,13 @@ public class PersonajeCtrl : MonoBehaviour
         PostionBrush = Camera.main.ScreenToWorldPoint(Input.mousePosition);//get click position
         Postion.z = -5;
         PostionBrush.z = -5;
-        /*
-        PostionBrush[0] += 0.5f;
-        PostionBrush[1] -= 0.5f;
-        */
+
         PostionBrush[0] += 1.0f;
         PostionBrush[1] -= 1.0f;
 
         if (Input.GetMouseButtonDown(0))
         {
             RayCast2D();
-            //Debug.Log("se mueve");
         }
 
         if (pincel != null)
@@ -80,11 +76,11 @@ public class PersonajeCtrl : MonoBehaviour
             var sceneInfo = SVGParser.ImportSVG(new StringReader(parte.part_svg));
             var shape = sceneInfo.NodeIDs[parte.part_name].Shapes[0];
 
-            var cambiarOrden = false;
+            //var cambiarOrden = false;
             if ((SolidFill)sceneInfo.NodeIDs[parte.part_name].Shapes[0].Fill == null)
             {
                 shape.Fill = new SolidFill() { Color = parte.color };
-                cambiarOrden = true;
+                //cambiarOrden = true;
             }
             var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
 
@@ -100,28 +96,29 @@ public class PersonajeCtrl : MonoBehaviour
             SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
             sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
             sr.sortingOrder = 4;
-            if (cambiarOrden)
+            /*if (cambiarOrden)
             {
                 sr.sortingOrder = 3;
-            }
+            }*/
             sr.flipY = false;
 
             //aqui se agrega los poligonos
             int indicePath = parte.part_svg.IndexOf("<path", 0);
-            if (indicePath != -1)
-            {
+            if(indicePath!=-1){
                 AddPolygonCollider2D(obj, parte.part_svg);
-            }
-            else
-            {
+            }else{
                 int indiceN = parte.part_svg.IndexOf("<circle", 0);
-                if (indiceN != -1)
-                {
+                if(indiceN!=-1){
                     AddCircleCollider2D(obj, parte.part_svg);
                 }
-                else
-                {
-                    AddRectCollider2D(obj, parte.part_svg);
+                else{
+                    int indiceN2 = parte.part_svg.IndexOf("<ellipse", 0);
+                    if(indiceN2!=-1){
+                       AddEllCollider2D(obj,parte.part_svg);      
+                    }
+                    else{
+                        AddRectCollider2D(obj, parte.part_svg);
+                    }
                 }
             }
 
@@ -137,29 +134,27 @@ public class PersonajeCtrl : MonoBehaviour
 
     //go es el gameobject que representa la parte
     //svg es el string de svg
-    public static void AddPolygonCollider2D(GameObject go, string svg)
+    public void AddPolygonCollider2D(GameObject go, string svg)
     {
         go.AddComponent<PolygonCollider2D>();
         PolygonCollider2D polygon = go.GetComponent<PolygonCollider2D>();
         List<Vector2> points = stringBetween(svg, " d=\"", "\"");
-        //stringBetween(svg, "<path d=\"", "\"");
-        //svg, "d=\"", "z\""
         //seteo todos los puntos que stringBetween me devuelve
         polygon.SetPath(0, points);
         polygon.offset = new Vector2(points[0][0], points[0][1]);
     }
 
-    public static void AddCircleCollider2D(GameObject go, string svg)
+    public void AddCircleCollider2D(GameObject go, string svg)
     {
         go.AddComponent<CircleCollider2D>();
         CircleCollider2D circulo = go.GetComponent<CircleCollider2D>();
         var points = stringBetweenCirc(svg, "cx=\"", "cy=\"", "r=\"");
         //seteo todos los puntos que stringBetween me devuelve
-        circulo.radius = points[2] / 20.000000f;
-        //circulo.offset = new Vector2(points[0], points[1]);
+        circulo.radius = points[2];
+        circulo.offset = new Vector2(points[0], points[1]*-1);
     }
 
-    public static void AddRectCollider2D(GameObject go, string svg)
+    public void AddRectCollider2D(GameObject go, string svg)
     {
         go.AddComponent<BoxCollider2D>();
         BoxCollider2D rect = go.GetComponent<BoxCollider2D>();
@@ -170,12 +165,93 @@ public class PersonajeCtrl : MonoBehaviour
     }
 
 
+    public void AddEllCollider2D(GameObject go, string svg)
+    {
+        go.AddComponent<PolygonCollider2D>();
+        PolygonCollider2D ell = go.GetComponent<PolygonCollider2D>();
+        var points = stringBetweenEll(svg, "rx=\"", "ry=\"");
+        //seteo todos los puntos que stringBetween me devuelve
+        ell.SetPath(0, points);
+        var off= offsetEll(svg, "cx=\"", "cy=\"");
+        ell.offset = new Vector2(off[0],off[1]*-1);
+    }
+
+    public  Vector2 offsetEll(string Source, string cx, string cy){
+        string result1 = "";
+        string result2 = "";
+        int StartIndexCX = Source.IndexOf(cx, 0) + cx.Length;
+        result1 = Source.Substring(StartIndexCX);
+        int EndIndexCX = result1.IndexOf( "\"", 0);
+        result2 = result1.Substring(0, EndIndexCX);
+        float offX = (float.Parse(result2, CultureInfo.InvariantCulture))/10.000000f;
+        string result3 = "";
+        string result4 = "";
+        int StartIndexCY = Source.IndexOf(cy, 0) + cy.Length;
+        result3 = Source.Substring(StartIndexCY);
+        int EndIndexCY = result3.IndexOf( "\"", 0);
+        result4 = result3.Substring(0, EndIndexCY);
+        float offY = (float.Parse(result4, CultureInfo.InvariantCulture))/10.000000f;
+        return new Vector2(offX,offY);
+    }
+
+
+    public List<Vector2> stringBetweenEll(string Source, string rx, string ry) {
+        List<Vector2> points = new List<Vector2>();
+        string result1 = "";
+        string result2 = "";
+        int StartIndexRX = Source.IndexOf(rx, 0) + rx.Length;
+        result1 = Source.Substring(StartIndexRX);
+        int EndIndexRX = result1.IndexOf( "\"", 0);
+        result2 = result1.Substring(0, EndIndexRX);
+        float radiusX = (float.Parse(result2, CultureInfo.InvariantCulture))/10.000000f;
+        string result3 = "";
+        string result4 = "";
+        int StartIndexRY = Source.IndexOf(ry, 0) + ry.Length;
+        result3 = Source.Substring(StartIndexRY);
+        int EndIndexRY = result3.IndexOf( "\"", 0);
+        result4 = result3.Substring(0, EndIndexRY);
+        float radiusY = (float.Parse(result4, CultureInfo.InvariantCulture))/10.000000f;
+        float angulo = 0;
+
+        for (int i = 0; i <= 31; i++)
+        {
+            float a = angulo * Mathf.Deg2Rad;
+
+            float x = radiusX * Mathf.Cos(a) * Mathf.Cos(0) - radiusY * Mathf.Sin(a) * Mathf.Sin(0);
+            float y = -radiusX * Mathf.Cos(a) * Mathf.Sin(0) - radiusY * Mathf.Sin(a) * Mathf.Cos(0);
+            points.Add(new Vector2(x, y));
+            angulo += 360f/30;
+        }
+
+        return points;
+    }
+
+    public List<Vector2> puntosArco(Vector2 inicio,float rx, float ry, int rotation){
+        float iniciox=inicio[0];
+        float inicioy=inicio[1];
+        List<Vector2> points = new List<Vector2>();
+        float angulo = 0;
+        float o = rotation * Mathf.Deg2Rad;
+
+        for (int i = 0; i <= 31; i++){
+            float a = angulo * Mathf.Deg2Rad;
+
+            float x = iniciox + rx * Mathf.Cos(a) * Mathf.Cos(o) - ry * Mathf.Sin(a) * Mathf.Sin(o);
+            float y = inicioy  -rx * Mathf.Cos(a) * Mathf.Sin(o) - ry * Mathf.Sin(a) * Mathf.Cos(o);
+
+            points.Add(new Vector2(x, y));
+            angulo += 360f/30;
+        }
+
+        return points;
+    }
+
 
 
     //source es el string de svg
     //Start es el string desde donde quiero recortar en este caso es path
     //End es el string hasta donde voy a recortar en este caso es z"
-    public static List<Vector2> stringBetween(string Source, string Start, string End)
+    public List<Vector2> stringBetween(string Source, string Start, string End)
     {
         string result1 = "";
         string result2 = "";
@@ -183,52 +259,170 @@ public class PersonajeCtrl : MonoBehaviour
         result1 = Source.Substring(StartIndex);
         int EndIndex = result1.IndexOf(End, 0);
         result2 = result1.Substring(0, EndIndex);
-        int indiceA = result2.IndexOf("a", 0);
-        if (indiceA != -1)
-        {
-            result2 = result2.Substring(0, indiceA);
-        }
         result2 = result2.Replace("-.", "-0.");
         result2 = result2.Replace("-", " -");
         result2 = result2.Replace("v", " h ");
         result2 = result2.Replace("h", " v ");
+        result2 = result2.Replace("q", " q ");
+        result2 = result2.Replace("c", " c ");
+        result2 = result2.Replace("s", " s ");
+        result2 = result2.Replace("a", " a ");
 
-        var lista = result2.Split(new char[] { ' ', ',', 'm', 'l', 'c', 'z', 'Z', 'M', 'L', 'C', 'a', 'A', 'q', 'Q', '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
-        List<Vector2> puntos = new List<Vector2>(lista.Length / 2);
+        var lista = result2.Split(new char[] { ' ', ',','S','m', 'l', 'z', 'Z', 'M', 'L','C', 'A', 'Q', '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
+        List<Vector2> puntos = new List<Vector2>(5);
+        float iniciox = (float.Parse(lista[0], CultureInfo.InvariantCulture)) / 20.000000f;
+        float inicioy= (-1.0f * ((float.Parse(lista[1], CultureInfo.InvariantCulture)) / 20.000000f));
         float valorXactual = 0.000000f;
         float valorYactual = 0.000000f;
+        float valorxCurva= 0.000000f;
+        float valorYcurva= 0.000000f;
         for (var i = 0; i < lista.Length; i = i + 2)
         {
-            if (lista[i] != "v" || lista[i] != "h")
-            {
-                valorXactual = valorXactual + (float.Parse(lista[i], CultureInfo.InvariantCulture)) / 20.000000f;
-                valorYactual = valorYactual + (-1.000000f * ((float.Parse(lista[i + 1], CultureInfo.InvariantCulture)) / 20.000000f));
+            if(lista[i]!="v" && lista[i]!="h"){
+                if(lista[i]=="c"){
+                    float inicialX= valorXactual;
+                    float inicialY= valorYactual;
+                    valorXactual = valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 20.000000f));
+                    Vector2 p1= new Vector2(valorXactual,valorYactual);
+                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 20.000000f));
+                    valorxCurva= valorXactual;
+                    valorYcurva= valorYactual;
+                    Vector2 p2= new Vector2(valorXactual,valorYactual);
+                    valorXactual = valorXactual + (float.Parse(lista[i+5], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 6], CultureInfo.InvariantCulture)) / 20.000000f));
+                    Vector2 p3= new Vector2(valorXactual,valorYactual);
+                    List<Vector2> temp= puntosCubic(new Vector2(inicialX,inicialY),p1,p2,p3);
+                    foreach(Vector2 punto in temp){
+                        puntos.Add(punto);
+                    }
+                    i+=5;
+
+                }else if(lista[i]=="q"){
+                    float inicialX= valorXactual;
+                    float inicialY= valorYactual;
+                    valorXactual = valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 20.000000f));
+                    Vector2 p1= new Vector2(valorXactual,valorYactual);
+                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 20.000000f));
+                    Vector2 p2= new Vector2(valorXactual,valorYactual);
+                    List<Vector2> temp= puntosCuadra(new Vector2(inicialX,inicialY),p1,p2);
+                    foreach(Vector2 punto in temp){
+                        puntos.Add(punto);
+                    }
+                    i+=3;
+
+                }else if(lista[i]=="s"){
+                    float inicialX= valorXactual;
+                    float inicialY= valorYactual;
+                    valorXactual= inicialX + (valorXactual-valorxCurva);
+                    valorYactual= inicialY + (valorYactual-valorYcurva);                    
+                    Vector2 p1= new Vector2(valorXactual,valorYactual);
+                    valorXactual = valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 20.000000f));
+                    valorxCurva= valorXactual;
+                    valorYcurva= valorYactual;
+                    Vector2 p2= new Vector2(valorXactual,valorYactual);
+                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 20.000000f));
+                    Vector2 p3= new Vector2(valorXactual,valorYactual);
+                    List<Vector2> temp= puntosCubic(new Vector2(inicialX,inicialY),p1,p2,p3);
+                    foreach(Vector2 punto in temp){
+                        puntos.Add(punto);
+                    }
+                    i+=3;
+
+                }else if(lista[i]=="a"){
+                    float inicialX= valorXactual;
+                    float inicialY= valorYactual;
+                    float rx =(float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
+                    float ry = -1.0f * (float.Parse(lista[i+2], CultureInfo.InvariantCulture)) / 20.000000f;
+                    int rotacion =  int.Parse(lista[i+3]);
+                    valorXactual = valorXactual + (float.Parse(lista[i+6], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 7], CultureInfo.InvariantCulture)) / 20.000000f));
+                    Vector2 p1= new Vector2(valorXactual,valorYactual);
+                    List<Vector2> temp=puntosArco(new Vector2(inicialX,inicialY),rx,ry,rotacion);
+                    foreach(Vector2 punto in temp){
+                        puntos.Add(punto);
+                    }
+                    i+=6;
+                }else{
+                    valorXactual = valorXactual + (float.Parse(lista[i], CultureInfo.InvariantCulture)) / 20.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 1], CultureInfo.InvariantCulture)) / 20.000000f));
+                    puntos.Add(new Vector2(valorXactual, valorYactual));
+                }
             }
-            //valorXactual = valorXactual + (float.Parse(lista[i], CultureInfo.InvariantCulture)) / 20.000000f;
-            //valorYactual = valorYactual + (-1.000000f * ((float.Parse(lista[i + 1], CultureInfo.InvariantCulture)) / 20.000000f));
-            else
-            {
-                if (lista[i] == "v")
-                {
+            else{
+                if(lista[i]=="v"){
                     valorXactual = valorXactual + 0.0f;
-                    valorYactual = valorYactual + (-1.000000f * ((float.Parse(lista[i + 1], CultureInfo.InvariantCulture)) / 20.000000f));
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 1], CultureInfo.InvariantCulture)) / 20.000000f));
+                    puntos.Add(new Vector2(valorXactual, valorYactual));
                 }
-                if (lista[i] == "h")
-                {
-                    valorXactual = valorXactual + valorXactual + (float.Parse(lista[i + 1], CultureInfo.InvariantCulture)) / 20.000000f;
+                if(lista[i]=="h"){
+                    valorXactual = valorXactual + valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
                     valorYactual = valorYactual + 0.0f;
+                    puntos.Add(new Vector2(valorXactual, valorYactual));
                 }
-            }
-            if (valorXactual != 0.0f && valorYactual != 0.0f)
-            {
-                puntos.Add(new Vector2(valorXactual, valorYactual));
             }
         }
+        puntos.Add(new Vector2(iniciox,inicioy));
+        puntos.Capacity= puntos.Count;
         return puntos;
     }
 
 
-    public static List<float> stringBetweenRec(string Source, string width, string heigth)
+    public List<Vector2> puntosCuadra(Vector2 p0, Vector2 p1, Vector2 p2){
+        int numP = 30;
+        List<Vector2> puntos = new List<Vector2>(numP);
+        for(int i= 1; i < numP +1;i++){
+            float t= i/(float)numP;
+            puntos.Add(puntoCuadr(t,p0,p1,p2));
+        }
+
+        return puntos;
+    }
+
+    public List<Vector2> puntosCubic(Vector2 p0, Vector2 p1, Vector2 p2,Vector2 p3){
+        int numP = 30;
+        List<Vector2> puntos = new List<Vector2>(numP);
+        for(int i= 1; i < numP +1;i++){
+            float t= i/(float)numP;
+            puntos.Add(puntoCub(t,p0,p1,p2,p3));
+        }
+
+        return puntos;
+    }
+
+
+    public Vector2 puntoCuadr(float t, Vector2 p0, Vector2 p1, Vector2 p2){
+        float u = 1 - t;
+        float tt= t * t;
+        float uu= u * u;
+        Vector2 p= uu * p0;
+        p += 2 * u * t * p1;
+        p += tt * p2;
+
+        return p;
+    }
+
+    public Vector2 puntoCub(float t, Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3){
+        float u = 1 - t;
+        float tt = t * t;
+        float uu = u * u;
+        float uuu = uu * u;
+        float ttt = tt * t;
+		
+        Vector2 p = uuu * p0; 
+        p += 3 * uu * t * p1; 
+        p += 3 * u * tt * p2; 
+        p += ttt * p3; 
+		
+        return p;
+    }
+
+    public  List<float> stringBetweenRec(string Source, string width, string heigth)
     {
         List<float> puntos = new List<float>();
         string result1 = "";
@@ -237,7 +431,7 @@ public class PersonajeCtrl : MonoBehaviour
         result1 = Source.Substring(StartIndexW);
         int EndIndexW = result1.IndexOf("\"", 0);
         result2 = result1.Substring(0, EndIndexW);
-        float wid = (float.Parse(result2, CultureInfo.InvariantCulture)) / 20.000000f;
+        float wid = (float.Parse(result2, CultureInfo.InvariantCulture)) / 10.000000f;
         puntos.Add(wid);
 
 
@@ -247,14 +441,14 @@ public class PersonajeCtrl : MonoBehaviour
         result3 = Source.Substring(StartIndexH);
         int EndIndexH = result3.IndexOf("\"", 0);
         result4 = result3.Substring(0, EndIndexH);
-        float heig = (float.Parse(result4, CultureInfo.InvariantCulture)) / 20.000000f;
+        float heig = (float.Parse(result4, CultureInfo.InvariantCulture)) / 10.000000f;
         puntos.Add(heig);
 
         return puntos;
     }
 
 
-    public static List<float> stringBetweenCirc(string Source, string cx, string cy, string r)
+    public List<float> stringBetweenCirc(string Source, string cx, string cy, string r)
     {
         List<float> puntos = new List<float>();
         //obtengo la coordenada x
@@ -264,7 +458,7 @@ public class PersonajeCtrl : MonoBehaviour
         result1 = Source.Substring(StartIndexCX);
         int EndIndexCX = result1.IndexOf("\"", 0);
         result2 = result1.Substring(0, EndIndexCX);
-        float coox = (float.Parse(result2, CultureInfo.InvariantCulture)) / 20.000000f;
+        float coox = (float.Parse(result2, CultureInfo.InvariantCulture)) / 10.000000f;
         puntos.Add(coox);
 
         //obtengo la coordenada y
@@ -274,17 +468,17 @@ public class PersonajeCtrl : MonoBehaviour
         result3 = Source.Substring(StartIndexCY);
         int EndIndexCY = result3.IndexOf("\"", 0);
         result4 = result3.Substring(0, EndIndexCY);
-        float cooy = (float.Parse(result4, CultureInfo.InvariantCulture)) / 20.000000f;
+        float cooy = (float.Parse(result4, CultureInfo.InvariantCulture)) / 10.000000f;
         puntos.Add(cooy);
 
         //obtengo el radio
         string result5 = "";
         string result6 = "";
-        int StartIndexR = Source.IndexOf(cx, 0) + cx.Length;
+        int StartIndexR = Source.IndexOf(r, 0) + r.Length;
         result5 = Source.Substring(StartIndexR);
         int EndIndexR = result5.IndexOf("\"", 0);
         result6 = result5.Substring(0, EndIndexR);
-        float radio = (float.Parse(result6, CultureInfo.InvariantCulture)) / 20.000000f;
+        float radio = (float.Parse(result6, CultureInfo.InvariantCulture)) / 10.000000f;
         puntos.Add(radio);
 
         return puntos;
@@ -301,23 +495,17 @@ public class PersonajeCtrl : MonoBehaviour
         }
         if (rayCastHit2D.collider.tag == "BrushColor")
         {
-            //set brush color
-            //Debug.Log(rayCastHit2D.collider.GetComponent<currentColor>().value);
             pincel.GetComponent<currentColor>().value = rayCastHit2D.collider.GetComponent<currentColor>().value;
             Color color = pincel.GetComponent<currentColor>().value;
             GameObject.Find("brush2").GetComponent<SpriteRenderer>().color = color;
 
-            //pincel.transform.GetChild(0).GetComponent<SpriteRenderer>().color = brush.currentColor;
         }
         else if (rayCastHit2D.collider.tag == "ImagePart")
-        {
-            //Debug.Log(rayCastHit2D.collider.GetComponent<SpriteRenderer>().name);  
-            Color color = pincel.GetComponent<currentColor>().value;
-            //StartCoroutine(crearParte(false, rayCastHit2D.collider.GetComponent<SpriteRenderer>().name));  
+        {  
+            Color color = pincel.GetComponent<currentColor>().value; 
             var nombre = rayCastHit2D.collider.GetComponent<SpriteRenderer>().name;
 
             var index = int.Parse(nombre.Replace("el_", ""));
-            //var parte= ver.partes[index-1];
             var parte = ver.graphic_line_parts[index - 2];
             //aqui debo crear los lienzos añadidos 
             GameObject obj = GameObject.Find(nombre);
@@ -343,14 +531,11 @@ public class PersonajeCtrl : MonoBehaviour
         var sceneInfo = SVGParser.ImportSVG(new StringReader(svgString));
 
         // Import the SVG at runtime
-        //var indiceS= id-1;
-        //var shape = sceneInfo.NodeIDs["el_"+indiceS].Shapes[0];
         var shape = sceneInfo.NodeIDs[id].Shapes[0];
-        //if((SolidFill)sceneInfo.NodeIDs["el_"+indiceS].Shapes[0].Fill==null){
+
         if ((SolidFill)sceneInfo.NodeIDs[id].Shapes[0].Fill == null)
         {
             shape.Fill = new SolidFill() { Color = colorA };
-            Debug.Log("no color");
             var index = int.Parse(parte.name.Replace("el_", ""));
             if (ver.graphic_line_name != "nieves_01")
             {
@@ -360,10 +545,7 @@ public class PersonajeCtrl : MonoBehaviour
             {
                 ver.graphic_line_parts[index - 2].color = colorA;
             }
-            //ver.graphic_line_parts[ver.graphic_line_parts.Count-index+1].color = colorA;
-            //ver.graphic_line_parts[index].color = colorA;
         }
-        //shape.Fill = new SolidFill() { Color = colorA };
 
         //pintas
         var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
@@ -379,26 +561,22 @@ public class PersonajeCtrl : MonoBehaviour
         Destroy(parte);
 
         //aqui se agrega los poligonos
-        /*if(indicePath!=-1){
+
+        if(indicePath!=-1){
             AddPolygonCollider2D(obj, svgString);
         }else{
-            AddCircleCollider2D(obj, svgString);
-        }*/
-
-        if (indicePath != -1)
-        {
-            AddPolygonCollider2D(obj, svgString);
-        }
-        else
-        {
             int indiceN = svgString.IndexOf("<circle", 0);
-            if (indiceN != -1)
-            {
+            if(indiceN!=-1){
                 AddCircleCollider2D(obj, svgString);
             }
-            else
-            {
-                AddRectCollider2D(obj, svgString);
+            else{
+                    int indiceN2 = svgString.IndexOf("<ellipse", 0);
+                    if(indiceN2!=-1){
+                       AddEllCollider2D(obj,svgString);      
+                    }
+                    else{
+                        AddRectCollider2D(obj, svgString);
+                    }
             }
         }
         obj.transform.parent = LienzoPrincipal.transform;
@@ -436,8 +614,6 @@ public class PersonajeCtrl : MonoBehaviour
 
         Colored cl = new Colored(id_user, id_graphic_line, id_expression, clothes, body);
         string json_django = JsonConvert.SerializeObject(cl);
-        Debug.Log(json_django);
-        //string json_django = JsonUtility.ToJson(cl);
 
         StartCoroutine(PostColoredGraphicLine(json_django, response =>
         {

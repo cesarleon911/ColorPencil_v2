@@ -48,8 +48,10 @@ public class PersonajeUIctrollers : MonoBehaviour
     {
 
         int partes = ver.graphic_line_parts.Count;
-        int emociones = ver.emociones.Count;
-        int accesorios = ver.accesorios.Count;
+        //int emociones = ver.emociones.Count;
+        int emociones =0;
+        //int accesorios = ver.accesorios.Count;
+        int accesorios = 0;
 
         if (partes > 0)
         {
@@ -78,13 +80,13 @@ public class PersonajeUIctrollers : MonoBehaviour
         colors.SetActive(true);
         brush.SetActive(true);
 
-        int p = ver.graphic_line_parts.Count;
-        int e = ver.emociones.Count;
-        int a = ver.accesorios.Count;
+        //int p = ver.graphic_line_parts.Count;
+        //int e = ver.emociones.Count;
+        //int a = ver.accesorios.Count;
 
-        print(p);
-        print(e);
-        print(a);
+        //print(p);
+        //print(e);
+        //print(a);
     }
 
     public void btn_accesorios()
@@ -96,7 +98,7 @@ public class PersonajeUIctrollers : MonoBehaviour
 
         accesorios.SetActive(true);
 
-        cargar_accesorios();
+        //cargar_accesorios();
     }
 
     public void btn_emociones()
@@ -107,7 +109,7 @@ public class PersonajeUIctrollers : MonoBehaviour
 
         emociones.SetActive(true);
 
-        cargar_emociones();
+        //cargar_emociones();
     }
 
     public void cargar_emociones()
