@@ -22,6 +22,7 @@ public class PersonajeCtrl : MonoBehaviour
     private int id_user;
     private int id_graphic_line;
 
+
     void Start()
     {
         per = DataJoin.instance.getBaseDato().data[DataJoin.instance.GetIndexPer() - 1];
@@ -95,7 +96,9 @@ public class PersonajeCtrl : MonoBehaviour
             obj.AddComponent<SpriteRenderer>();
             SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
             sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
-            sr.sortingOrder = 4;
+            sr.sortingOrder = 8;
+
+
             /*if (cambiarOrden)
             {
                 sr.sortingOrder = 3;
@@ -104,27 +107,119 @@ public class PersonajeCtrl : MonoBehaviour
 
             //aqui se agrega los poligonos
             int indicePath = parte.part_svg.IndexOf("<path", 0);
+            ContactFilter2D filter = new ContactFilter2D().NoFilter();
+            List<Collider2D> results = new List<Collider2D>(ver.graphic_line_parts.Count);
+            var posicionZ =0;
             if(indicePath!=-1){
                 AddPolygonCollider2D(obj, parte.part_svg);
+                int colliderCount = obj.GetComponent<PolygonCollider2D>().OverlapCollider(filter, results);
+                int maxd = 4;
+                if(colliderCount>0){
+                    var tamañoA = obj.GetComponent<PolygonCollider2D>().bounds.size[0]*obj.GetComponent<PolygonCollider2D>().bounds.size[1];
+                    foreach(Collider2D col in results){
+                        var tamañoC = col.bounds.size[0]*col.bounds.size[1];
+                        if(tamañoA<tamañoC && maxd!=0 && col.GetComponent<SpriteRenderer>().sortingOrder>4){
+                            var ordenC = col.GetComponent<SpriteRenderer>().sortingOrder;
+                            col.GetComponent<SpriteRenderer>().sortingOrder= ordenC -1;
+                            var posicion = col.transform.localPosition;
+                            col.transform.localPosition = new Vector3(posicion[0],posicion[1],posicion[2]+1);
+                            maxd--;
+                        }else{
+                            if(maxd!=0 && sr.sortingOrder>4){
+                                var ordenA = sr.sortingOrder;
+                                sr.sortingOrder= ordenA -1;
+                                maxd--;
+                                posicionZ++;
+                            }
+                        }
+                    }            
+                }
             }else{
                 int indiceN = parte.part_svg.IndexOf("<circle", 0);
                 if(indiceN!=-1){
                     AddCircleCollider2D(obj, parte.part_svg);
+                    int maxd = 4;
+                    int colliderCount = obj.GetComponent<CircleCollider2D>().OverlapCollider(filter, results);                   
+                    if(colliderCount>0){
+                        var tamañoA = obj.GetComponent<CircleCollider2D>().bounds.size[0]*obj.GetComponent<CircleCollider2D>().bounds.size[1];
+                        foreach(Collider2D col in results){
+                            var tamañoC = col.bounds.size[0]*col.bounds.size[1];
+                            if(tamañoA<tamañoC && maxd!=0 && col.GetComponent<SpriteRenderer>().sortingOrder>4){
+                                var ordenC = col.GetComponent<SpriteRenderer>().sortingOrder;
+                                col.GetComponent<SpriteRenderer>().sortingOrder= ordenC -1;
+                                var posicion = col.transform.localPosition;
+                                col.transform.localPosition = new Vector3(posicion[0],posicion[1],posicion[2]+1);
+                                maxd--;
+                            }else{
+                                if(maxd!=0 && sr.sortingOrder>4){
+                                    var ordenA = sr.sortingOrder;
+                                    sr.sortingOrder= ordenA -1;
+                                    maxd--;
+                                    posicionZ++;
+                                }
+                            }
+                        }            
+                    }
                 }
                 else{
                     int indiceN2 = parte.part_svg.IndexOf("<ellipse", 0);
                     if(indiceN2!=-1){
-                       AddEllCollider2D(obj,parte.part_svg);      
+                       AddEllCollider2D(obj,parte.part_svg); 
+                       int maxd = 4;
+                       int colliderCount = obj.GetComponent<PolygonCollider2D>().OverlapCollider(filter, results);
+                        if(colliderCount>0){
+                            var tamañoA = obj.GetComponent<PolygonCollider2D>().bounds.size[0]*obj.GetComponent<PolygonCollider2D>().bounds.size[1];
+                            foreach(Collider2D col in results){
+                                var tamañoC = col.bounds.size[0]*col.bounds.size[1];
+                                if(tamañoA<tamañoC && maxd!=0 && col.GetComponent<SpriteRenderer>().sortingOrder>4){
+                                    var ordenC = col.GetComponent<SpriteRenderer>().sortingOrder;
+                                    col.GetComponent<SpriteRenderer>().sortingOrder= ordenC -1;
+                                    var posicion = col.transform.localPosition;
+                                    col.transform.localPosition = new Vector3(posicion[0],posicion[1],posicion[2]+1);
+                                    maxd--;
+                                }else{
+                                    if(maxd!=0 && sr.sortingOrder>4){
+                                        var ordenA = sr.sortingOrder;
+                                        sr.sortingOrder= ordenA -1;
+                                        maxd--;
+                                        posicionZ++;
+                                    }
+
+                                }
+                            }            
+                        }     
                     }
                     else{
                         AddRectCollider2D(obj, parte.part_svg);
+                        int maxd = 4;
+                        int colliderCount = obj.GetComponent<BoxCollider2D>().OverlapCollider(filter, results);
+                        if(colliderCount>0){
+                            var tamañoA = obj.GetComponent<BoxCollider2D>().bounds.size[0]*obj.GetComponent<BoxCollider2D>().bounds.size[1];
+                            foreach(Collider2D col in results){
+                                var tamañoC = col.bounds.size[0]*col.bounds.size[1];
+                                if(tamañoA<tamañoC && maxd!=0 && col.GetComponent<SpriteRenderer>().sortingOrder>4){
+                                    var ordenC = col.GetComponent<SpriteRenderer>().sortingOrder;
+                                    col.GetComponent<SpriteRenderer>().sortingOrder= ordenC -1;
+                                    var posicion = col.transform.localPosition;
+                                     col.transform.localPosition = new Vector3(posicion[0],posicion[1],posicion[2]+1);
+                                    maxd--;
+                                }else{
+                                    if(maxd!=0 && sr.sortingOrder>4){
+                                        var ordenA = sr.sortingOrder;
+                                        sr.sortingOrder= ordenA -1; 
+                                        maxd--;
+                                        posicionZ++;
+                                    }
+                                }
+                            }            
+                        }    
                     }
                 }
             }
 
             obj.transform.parent = LienzoPrincipal.transform;
             obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
-            obj.transform.localPosition = new Vector3(-2, 2.7f, 0);
+            obj.transform.localPosition = new Vector3(-2, 2.7f, posicionZ);
 
         }
 
@@ -138,6 +233,7 @@ public class PersonajeCtrl : MonoBehaviour
     {
         go.AddComponent<PolygonCollider2D>();
         PolygonCollider2D polygon = go.GetComponent<PolygonCollider2D>();
+        //polygon.isTrigger = true;
         List<Vector2> points = stringBetween(svg, " d=\"", "\"");
         //seteo todos los puntos que stringBetween me devuelve
         polygon.SetPath(0, points);
@@ -148,6 +244,7 @@ public class PersonajeCtrl : MonoBehaviour
     {
         go.AddComponent<CircleCollider2D>();
         CircleCollider2D circulo = go.GetComponent<CircleCollider2D>();
+        //circulo.isTrigger = true;
         var points = stringBetweenCirc(svg, "cx=\"", "cy=\"", "r=\"");
         //seteo todos los puntos que stringBetween me devuelve
         circulo.radius = points[2];
@@ -158,6 +255,7 @@ public class PersonajeCtrl : MonoBehaviour
     {
         go.AddComponent<BoxCollider2D>();
         BoxCollider2D rect = go.GetComponent<BoxCollider2D>();
+        //rect.isTrigger = true;
         var points = stringBetweenRec(svg, "width=\"", "height=\"");
         //seteo todos los puntos que stringBetween me devuelve
         rect.size = new Vector2(points[0], points[1]);
@@ -169,12 +267,15 @@ public class PersonajeCtrl : MonoBehaviour
     {
         go.AddComponent<PolygonCollider2D>();
         PolygonCollider2D ell = go.GetComponent<PolygonCollider2D>();
+        //ell.isTrigger = true;
         var points = stringBetweenEll(svg, "rx=\"", "ry=\"");
         //seteo todos los puntos que stringBetween me devuelve
         ell.SetPath(0, points);
         var off= offsetEll(svg, "cx=\"", "cy=\"");
         ell.offset = new Vector2(off[0],off[1]*-1);
+
     }
+
 
     public  Vector2 offsetEll(string Source, string cx, string cy){
         string result1 = "";
@@ -226,27 +327,6 @@ public class PersonajeCtrl : MonoBehaviour
         return points;
     }
 
-    public List<Vector2> puntosArco(Vector2 inicio,float rx, float ry, int rotation){
-        float iniciox=inicio[0];
-        float inicioy=inicio[1];
-        List<Vector2> points = new List<Vector2>();
-        float angulo = 0;
-        float o = rotation * Mathf.Deg2Rad;
-
-        for (int i = 0; i <= 31; i++){
-            float a = angulo * Mathf.Deg2Rad;
-
-            float x = iniciox + rx * Mathf.Cos(a) * Mathf.Cos(o) - ry * Mathf.Sin(a) * Mathf.Sin(o);
-            float y = inicioy  -rx * Mathf.Cos(a) * Mathf.Sin(o) - ry * Mathf.Sin(a) * Mathf.Cos(o);
-
-            points.Add(new Vector2(x, y));
-            angulo += 360f/30;
-        }
-
-        return points;
-    }
-
-
 
     //source es el string de svg
     //Start es el string desde donde quiero recortar en este caso es path
@@ -267,6 +347,7 @@ public class PersonajeCtrl : MonoBehaviour
         result2 = result2.Replace("c", " c ");
         result2 = result2.Replace("s", " s ");
         result2 = result2.Replace("a", " a ");
+        result2 = result2.Replace("t", " t ");
 
         var lista = result2.Split(new char[] { ' ', ',','S','m', 'l', 'z', 'Z', 'M', 'L','C', 'A', 'Q', '\n' }, System.StringSplitOptions.RemoveEmptyEntries);
         List<Vector2> puntos = new List<Vector2>(5);
@@ -282,16 +363,16 @@ public class PersonajeCtrl : MonoBehaviour
                 if(lista[i]=="c"){
                     float inicialX= valorXactual;
                     float inicialY= valorYactual;
-                    valorXactual = valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
-                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 20.000000f));
-                    Vector2 p1= new Vector2(valorXactual,valorYactual);
-                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 20.000000f;
-                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 20.000000f));
-                    valorxCurva= valorXactual;
-                    valorYcurva= valorYactual;
-                    Vector2 p2= new Vector2(valorXactual,valorYactual);
-                    valorXactual = valorXactual + (float.Parse(lista[i+5], CultureInfo.InvariantCulture)) / 20.000000f;
-                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 6], CultureInfo.InvariantCulture)) / 20.000000f));
+                    var tempx1 = valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 10.000000f;
+                    var tempy1 = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 10.000000f));
+                    Vector2 p1= new Vector2(tempx1,tempy1);
+                    var tempx2 = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 10.000000f;
+                    var tempy2 = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 10.000000f));
+                    valorxCurva= tempx2;
+                    valorYcurva= tempy2;
+                    Vector2 p2= new Vector2(tempx2,tempy2);
+                    valorXactual = valorXactual + (float.Parse(lista[i+5], CultureInfo.InvariantCulture)) / 10.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 6], CultureInfo.InvariantCulture)) / 10.000000f));
                     Vector2 p3= new Vector2(valorXactual,valorYactual);
                     List<Vector2> temp= puntosCubic(new Vector2(inicialX,inicialY),p1,p2,p3);
                     foreach(Vector2 punto in temp){
@@ -302,11 +383,13 @@ public class PersonajeCtrl : MonoBehaviour
                 }else if(lista[i]=="q"){
                     float inicialX= valorXactual;
                     float inicialY= valorYactual;
-                    valorXactual = valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
-                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 20.000000f));
-                    Vector2 p1= new Vector2(valorXactual,valorYactual);
-                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 20.000000f;
-                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 20.000000f));
+                    var tempx= valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 10.000000f;
+                    var tempy = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 10.000000f));
+                    valorxCurva= tempx;
+                    valorYcurva= tempy;
+                    Vector2 p1= new Vector2(tempx,tempy);
+                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 10.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 10.000000f));
                     Vector2 p2= new Vector2(valorXactual,valorYactual);
                     List<Vector2> temp= puntosCuadra(new Vector2(inicialX,inicialY),p1,p2);
                     foreach(Vector2 punto in temp){
@@ -317,16 +400,16 @@ public class PersonajeCtrl : MonoBehaviour
                 }else if(lista[i]=="s"){
                     float inicialX= valorXactual;
                     float inicialY= valorYactual;
-                    valorXactual= inicialX + (valorXactual-valorxCurva);
-                    valorYactual= inicialY + (valorYactual-valorYcurva);                    
-                    Vector2 p1= new Vector2(valorXactual,valorYactual);
-                    valorXactual = valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
-                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 20.000000f));
-                    valorxCurva= valorXactual;
-                    valorYcurva= valorYactual;
-                    Vector2 p2= new Vector2(valorXactual,valorYactual);
-                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 20.000000f;
-                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 20.000000f));
+                    var tempx1= inicialX + (valorXactual-valorxCurva);
+                    var tempy1= inicialY + (valorYactual-valorYcurva);                      
+                    Vector2 p1= new Vector2(tempx1,tempy1);
+                    var tempx2 = valorXactual + (float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 10.000000f;
+                    var tempy2 = valorYactual + (-1.0f * ((float.Parse(lista[i + 2], CultureInfo.InvariantCulture)) / 10.000000f));
+                    valorxCurva= tempx2;
+                    valorYcurva= tempy2;
+                    Vector2 p2= new Vector2(tempx2,tempy2);
+                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 10.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 10.000000f));
                     Vector2 p3= new Vector2(valorXactual,valorYactual);
                     List<Vector2> temp= puntosCubic(new Vector2(inicialX,inicialY),p1,p2,p3);
                     foreach(Vector2 punto in temp){
@@ -337,18 +420,37 @@ public class PersonajeCtrl : MonoBehaviour
                 }else if(lista[i]=="a"){
                     float inicialX= valorXactual;
                     float inicialY= valorYactual;
-                    float rx =(float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 20.000000f;
-                    float ry = -1.0f * (float.Parse(lista[i+2], CultureInfo.InvariantCulture)) / 20.000000f;
+                    float rx =(float.Parse(lista[i+1], CultureInfo.InvariantCulture)) / 10.000000f;
+                    float ry = -1.0f * (float.Parse(lista[i+2], CultureInfo.InvariantCulture)) / 10.000000f;
                     int rotacion =  int.Parse(lista[i+3]);
-                    valorXactual = valorXactual + (float.Parse(lista[i+6], CultureInfo.InvariantCulture)) / 20.000000f;
-                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 7], CultureInfo.InvariantCulture)) / 20.000000f));
+                    bool flagA =  (1==int.Parse(lista[i+4]));
+                    bool  flagS =  (1==int.Parse(lista[i+5]));
+                    valorXactual = valorXactual + (float.Parse(lista[i+6], CultureInfo.InvariantCulture)) / 10.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 7], CultureInfo.InvariantCulture)) / 10.000000f));
                     Vector2 p1= new Vector2(valorXactual,valorYactual);
-                    List<Vector2> temp=puntosArco(new Vector2(inicialX,inicialY),rx,ry,rotacion);
+                    List<Vector2> temp= endpointToCenterArcParams(new Vector2(inicialX,inicialY),p1,new Vector2(rx,ry), rotacion, flagA, flagS);
                     foreach(Vector2 punto in temp){
                         puntos.Add(punto);
                     }
                     i+=6;
-                }else{
+                }else if(lista[i]=="t"){
+                    float inicialX= valorXactual;
+                    float inicialY= valorYactual;
+                    var tempx1= inicialX + (valorXactual-valorxCurva);
+                    var tempy1= inicialY + (valorYactual-valorYcurva);
+                    valorxCurva= tempx1;
+                    valorYcurva= tempy1;                      
+                    Vector2 p1= new Vector2(tempx1,tempy1);
+                    valorXactual = valorXactual + (float.Parse(lista[i+3], CultureInfo.InvariantCulture)) / 10.000000f;
+                    valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 4], CultureInfo.InvariantCulture)) / 10.000000f));
+                    Vector2 p2= new Vector2(valorXactual,valorYactual);
+                    List<Vector2> temp= puntosCuadra(new Vector2(inicialX,inicialY),p1,p2);;
+                    foreach(Vector2 punto in temp){
+                        puntos.Add(punto);
+                    }
+                    
+                }
+                else{
                     valorXactual = valorXactual + (float.Parse(lista[i], CultureInfo.InvariantCulture)) / 20.000000f;
                     valorYactual = valorYactual + (-1.0f * ((float.Parse(lista[i + 1], CultureInfo.InvariantCulture)) / 20.000000f));
                     puntos.Add(new Vector2(valorXactual, valorYactual));
@@ -372,6 +474,85 @@ public class PersonajeCtrl : MonoBehaviour
         return puntos;
     }
 
+
+    
+
+    public Vector2 ellipticArcPoint( Vector2 c, Vector2 r, float xAngle, float t ){
+        var puntoX = c[0] + r[0] * Mathf.Cos(xAngle) * Mathf.Cos(t) - r[1] * Mathf.Sin(xAngle) * Mathf.Sin(t);
+        var puntoY = c[1] + r[0] * Mathf.Sin(xAngle) * Mathf.Cos(t) + r[1] * Mathf.Cos(xAngle) * Mathf.Sin(t);
+        return new Vector2(puntoX,puntoY);
+    }
+
+    public List<Vector2> endpointToCenterArcParams(Vector2 p1, Vector2 p2, Vector2 r_, float xAngle, bool flagA, bool flagS){
+        double rX = Mathf.Abs(r_[0]);
+        double rY = Mathf.Abs(r_[1]);
+        Vector2 c= new Vector2();
+        Vector2 angles = new Vector2();
+        Vector2 radio= new Vector2();
+        List<Vector2> valores = new List<Vector2>();
+
+        double dx2 = (p1[0] - p2[0]) / 2.0;
+        double dy2 = (p1[1] - p2[1]) / 2.0;
+        double x1p = Mathf.Cos(xAngle)*dx2 + Mathf.Sin(xAngle)*dy2;
+        double y1p = -Mathf.Sin(xAngle)*dx2 + Mathf.Cos(xAngle)*dy2;
+
+        double rxs = rX * rX;
+        double rys = rY * rY;
+        double x1ps = x1p * x1p;
+        double y1ps = y1p * y1p;
+
+        double cr = x1ps/rxs + y1ps/rys;
+        if (cr > 1) {
+            var s = System.Math.Sqrt(cr);
+            rX = s * rX;
+            rY = s * rY;
+            rxs = rX * rX;
+            rys = rY * rY;
+        }
+        double dq = (rxs * y1ps + rys * x1ps);
+        double pq = (rxs*rys - dq) / dq;
+        double q = System.Math.Sqrt( System.Math.Max(0,pq) ); 
+
+        if (flagA == flagS){
+            q = -q;
+        }
+        double cxp = q * rX * y1p / rY;
+        double cyp = - q * rY * x1p / rX;
+
+
+        double cx = Mathf.Cos(xAngle)*cxp - Mathf.Sin(xAngle)*cyp + (p1[0] + p2[0])/2;
+        double cy = Mathf.Sin(xAngle)*cxp + Mathf.Cos(xAngle)*cyp + (p1[1] + p2[1])/2;
+
+
+        double theta = svgAngle( 1,0, (x1p-cxp) / rX, (y1p - cyp)/rY );
+        double delta = svgAngle((x1p - cxp)/rX, (y1p - cyp)/rY,(-x1p - cxp)/rX, (-y1p-cyp)/rY);
+        delta = delta % (System.Math.PI * 2) ;
+        if (!flagS){
+            delta -= 2 * System.Math.PI;
+        }
+        radio= new Vector2((float)rX,(float)rY);
+        c = new Vector2((float)cx,(float)cy);
+        angles = new Vector2((float)theta, (float)delta);
+
+        for(float t=angles[0] ; t < angles[1] +1;t+=1.0f){
+            valores.Add(ellipticArcPoint(c, radio, xAngle, t ));
+        }
+        return valores;
+    }
+
+    public float svgAngle( double ux, double uy, double vx, double vy ){
+        Vector2 u = new Vector2((float)ux, (float)uy);
+        Vector2 v = new Vector2((float)vx, (float)vy);
+
+        var dot = Vector2.Dot(u,v);
+        //var len = Vector2.Length(u) * Vector2.Length(v);
+        var len = u.magnitude * v.magnitude;
+        var ang = Mathf.Acos( Mathf.Clamp(dot / len,-1,1) ); 
+        if ( (u[0]*v[1] - u[1]*v[0]) < 0){
+            ang = -ang;
+        }
+        return ang;
+    }
 
     public List<Vector2> puntosCuadra(Vector2 p0, Vector2 p1, Vector2 p2){
         int numP = 30;
@@ -484,6 +665,11 @@ public class PersonajeCtrl : MonoBehaviour
         return puntos;
     }
 
+    //public void OnCollisionEnter2D(Collision2D col) {
+    //    Debug.Log("colliaion");
+    //}
+
+
     //2d screen raycast
     private void RayCast2D()
     {
@@ -555,33 +741,116 @@ public class PersonajeCtrl : MonoBehaviour
         obj.AddComponent<SpriteRenderer>();
         SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
         sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
-        sr.sortingOrder = 3;
+        sr.sortingOrder = parte.GetComponent<SpriteRenderer>().sortingOrder;
         sr.flipY = false;
 
         Destroy(parte);
 
         //aqui se agrega los poligonos
-
+        ContactFilter2D filter = new ContactFilter2D().NoFilter();
+        List<Collider2D> results = new List<Collider2D>(ver.graphic_line_parts.Count);
+        var posicionZ = parte.transform.localPosition[2];
         if(indicePath!=-1){
             AddPolygonCollider2D(obj, svgString);
+            int colliderCount = obj.GetComponent<PolygonCollider2D>().OverlapCollider(filter, results);
+            int maxd=4;
+                if(colliderCount>0){
+                    var tamañoA = obj.GetComponent<PolygonCollider2D>().bounds.size[0]*obj.GetComponent<PolygonCollider2D>().bounds.size[1];
+                    foreach(Collider2D col in results){
+                        var tamañoC = col.bounds.size[0]*col.bounds.size[1];
+                        if(tamañoA<tamañoC && maxd!=0 && col.GetComponent<SpriteRenderer>().sortingOrder>4){
+                            var ordenC = col.GetComponent<SpriteRenderer>().sortingOrder;
+                            col.GetComponent<SpriteRenderer>().sortingOrder= ordenC -1;
+                            maxd--;
+                        }else{
+                            if(maxd!=0 && sr.sortingOrder>4){
+                                var ordenA = sr.sortingOrder;
+                                sr.sortingOrder= ordenA -1;
+                                maxd--;
+                                posicionZ++;
+                            }
+                        }
+                    }            
+                }
         }else{
             int indiceN = svgString.IndexOf("<circle", 0);
             if(indiceN!=-1){
                 AddCircleCollider2D(obj, svgString);
+                    int maxd=4;
+                    int colliderCount = obj.GetComponent<CircleCollider2D>().OverlapCollider(filter, results);
+
+                    if(colliderCount>0){
+                        var tamañoA = obj.GetComponent<CircleCollider2D>().bounds.size[0]*obj.GetComponent<CircleCollider2D>().bounds.size[1];
+                        foreach(Collider2D col in results){
+                            var tamañoC = col.bounds.size[0]*col.bounds.size[1];
+                            if(tamañoA<tamañoC && maxd!=0 && col.GetComponent<SpriteRenderer>().sortingOrder>4){
+                                var ordenC = col.GetComponent<SpriteRenderer>().sortingOrder;
+                                col.GetComponent<SpriteRenderer>().sortingOrder= ordenC -1;
+                                maxd--;
+                            }else{
+                                if(maxd!=0 && sr.sortingOrder>4){
+                                    var ordenA = sr.sortingOrder;
+                                    sr.sortingOrder= ordenA -1;
+                                    maxd--;
+                                    posicionZ++;
+                                }
+                            }
+                        }            
+                    }
             }
             else{
                     int indiceN2 = svgString.IndexOf("<ellipse", 0);
                     if(indiceN2!=-1){
-                       AddEllCollider2D(obj,svgString);      
+                       AddEllCollider2D(obj,svgString); 
+                       int maxd=4;  
+                       int colliderCount = obj.GetComponent<PolygonCollider2D>().OverlapCollider(filter, results);
+                        if(colliderCount>0){
+                            var tamañoA = obj.GetComponent<PolygonCollider2D>().bounds.size[0]*obj.GetComponent<PolygonCollider2D>().bounds.size[1];
+                            foreach(Collider2D col in results){
+                                var tamañoC = col.bounds.size[0]*col.bounds.size[1];
+                                if(tamañoA<tamañoC && maxd!=0 && col.GetComponent<SpriteRenderer>().sortingOrder>4){
+                                    var ordenC = col.GetComponent<SpriteRenderer>().sortingOrder;
+                                    col.GetComponent<SpriteRenderer>().sortingOrder= ordenC -1;
+                                    maxd--;
+                                }else{
+                                    if(maxd!=0  && sr.sortingOrder>4){
+                                        var ordenA = sr.sortingOrder;
+                                        sr.sortingOrder= ordenA -1;
+                                        maxd--;
+                                        posicionZ++;
+                                    }
+                                }
+                            }            
+                        }      
                     }
                     else{
                         AddRectCollider2D(obj, svgString);
+                        int maxd=4;
+                        int colliderCount = obj.GetComponent<BoxCollider2D>().OverlapCollider(filter, results);
+                        if(colliderCount>0){
+                            var tamañoA = obj.GetComponent<BoxCollider2D>().bounds.size[0]*obj.GetComponent<BoxCollider2D>().bounds.size[1];
+                            foreach(Collider2D col in results){
+                                var tamañoC = col.bounds.size[0]*col.bounds.size[1];
+                                if(tamañoA<tamañoC && maxd!=0 && col.GetComponent<SpriteRenderer>().sortingOrder>4){
+                                    var ordenC = col.GetComponent<SpriteRenderer>().sortingOrder;
+                                    col.GetComponent<SpriteRenderer>().sortingOrder= ordenC -1;
+                                    maxd--;
+                                }else{
+                                    if(maxd!=0  && sr.sortingOrder>4){
+                                        var ordenA = sr.sortingOrder;
+                                        sr.sortingOrder= ordenA -1;
+                                        maxd--;
+                                        posicionZ++;
+                                    }
+                                }
+                            }            
+                        }    
                     }
             }
         }
         obj.transform.parent = LienzoPrincipal.transform;
         obj.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
-        obj.transform.localPosition = new Vector3(-2, 2.7f, 0);
+        obj.transform.localPosition = new Vector3(-2, 2.7f, posicionZ);
 
     }
 
@@ -605,8 +874,7 @@ public class PersonajeCtrl : MonoBehaviour
     }
 
 
-    public void writeNewData()
-    {
+    public void writeNewData(){
         int id_expression = 1;
 
         List<Clothes> clothes = new List<Clothes>();
