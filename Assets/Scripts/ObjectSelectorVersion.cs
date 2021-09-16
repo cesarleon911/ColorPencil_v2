@@ -6,6 +6,7 @@ using Unity.VectorGraphics;
 
 public class ObjectSelectorVersion : MonoBehaviour
 {
+    Colorimetria colores = new Colorimetria();
     public List<GameObject> personaje;
     public GameObject btn_avanza;
     public GameObject btn_retrocede;
@@ -124,11 +125,14 @@ public class ObjectSelectorVersion : MonoBehaviour
 
                     var sceneInfo = SVGParser.ImportSVG(new StringReader(parte.part_svg));
                     var shape = sceneInfo.NodeIDs[parte.part_name].Shapes[0];
-                    //var cambiarOrden = false;
                     if ((SolidFill)sceneInfo.NodeIDs[parte.part_name].Shapes[0].Fill == null)
                     {
-                        shape.Fill = new SolidFill() { Color = parte.color };
-                        //cambiarOrden=true;
+
+                        if (parte.color == null) {
+                            parte.color = "FFFFFFFF";
+                        }
+
+                        shape.Fill = new SolidFill() { Color = colores.GetColorFromString(parte.color) };
                     }
 
                     var geoms = VectorUtils.TessellateScene(sceneInfo.Scene, tessOptions);
@@ -138,10 +142,6 @@ public class ObjectSelectorVersion : MonoBehaviour
                     obj.AddComponent<SpriteRenderer>();
                     SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
                     sr.sprite = VectorUtils.BuildSprite(geoms, 10.0f, VectorUtils.Alignment.SVGOrigin, Vector2.zero, 128, true);
-                    /*sr.sortingOrder = 4;
-                    if(cambiarOrden){
-                        sr.sortingOrder = 3;
-                    }*/
                     sr.sortingOrder = 3;
                    
                     sr.flipY = false;
