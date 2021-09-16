@@ -101,7 +101,7 @@ public class PersonajeUIctrollers : MonoBehaviour
 
         accesorios.SetActive(true);
 
-        cargar_accesorios();
+        //cargar_accesorios();
     }
 
     public void btn_emociones()
@@ -112,7 +112,7 @@ public class PersonajeUIctrollers : MonoBehaviour
 
         emociones.SetActive(true);
 
-        cargar_emociones();
+        //cargar_emociones();
     }
 
     public void cargar_emociones()
