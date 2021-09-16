@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 
 public class DataJoin : MonoBehaviour
@@ -101,8 +102,9 @@ public class DataJoin : MonoBehaviour
         }
         else {
             this.BaseDato = JsonConvert.DeserializeObject<Data>(uwr.downloadHandler.text);
-
         }
+
+        guardado_datos_persistentes();
 
         yield return new WaitForSeconds(seg);
 
@@ -110,19 +112,26 @@ public class DataJoin : MonoBehaviour
         StartCoroutine(NewUser(response =>
         {
             post_result = response;
+            Debug.Log(post_result);
+            //JArray usuarioB = JArray.Parse(post_result);
             JObject usuarioB = JObject.Parse(post_result);
             this.user = (int)usuarioB["id_user"];
             SceneManager.LoadScene("carga");
         }));
+
+
+
     
        
     }
 
-    IEnumerator NewUser(System.Action<string> callback){
+    IEnumerator NewUser(System.Action<string> callback)
+    {
         string deviceId = SystemInfo.deviceUniqueIdentifier;
 
         User u = new User(deviceId);
         string data_send = JsonConvert.SerializeObject(u);
+
 
         var uwr = new UnityWebRequest("http://207.246.65.177/api/users/", "POST");
         byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(data_send);
@@ -133,12 +142,43 @@ public class DataJoin : MonoBehaviour
 
         yield return uwr.SendWebRequest();
 
-        if (uwr.isNetworkError){
+        if (uwr.isNetworkError)
+        {
             Debug.Log("Error While Sending: " + uwr.error);
         }
 
         callback?.Invoke(uwr.downloadHandler.text);
     }
+
+    
+    public void guardado_datos_persistentes() {
+        string path = Application.persistentDataPath + "/guardado.json";
+
+        Debug.Log(path);
+
+        //primero reviso si existe el archivo
+        if (File.Exists(path))
+        {
+            //leo el archivo y comparo con los datos existentes, si coinciden entonces actualizo los lo colores del current data
+
+            //this.BaseDato = JsonConvert.DeserializeObject<Data>(uwr.downloadHandler.text);
+
+            string jsonStringRead = File.ReadAllText(path);
+            List<Personajes> aux = JsonConvert.DeserializeObject< List < Personajes >> (jsonStringRead);
+            
+
+            if (aux.Count == this.BaseDato.data.Count) {
+                this.BaseDato.data = aux;
+            }
+            
+        }
+        else {
+            // si no existe lo creo 
+            string jsonStringSave = JsonConvert.SerializeObject(DataJoin.instance.getBaseDato().data);
+            File.WriteAllText(path, jsonStringSave);
+        }
+    }
+    
 
 
 }

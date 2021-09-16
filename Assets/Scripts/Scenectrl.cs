@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json;
+using System.IO;
 
 public class Scenectrl : MonoBehaviour
 {
@@ -27,6 +29,7 @@ public class Scenectrl : MonoBehaviour
     }
 
     public void btn_back_pintado() {
+        guardar_data_persistente();
         SceneManager.LoadScene("MenuVersionesPersonajes");
     }
 
@@ -40,7 +43,9 @@ public class Scenectrl : MonoBehaviour
         SceneManager.LoadScene("MLienzoPersonajes");
     }
 
-   
-
-
+    public void guardar_data_persistente() {
+          string path = Application.persistentDataPath + "/guardado.json";
+          string jsonStringSave = JsonConvert.SerializeObject(DataJoin.instance.getBaseDato().data);
+          File.WriteAllText(path, jsonStringSave);
+    }
 }

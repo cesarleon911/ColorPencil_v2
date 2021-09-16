@@ -6,8 +6,8 @@ using UnityEngine;
 //se supone que este archivo es el almacenara datos adicionales
 public class Data
 {
-    public string user;
-    public List<Personajes> data;         // lista de personajes (0-9)
+    public string user { get; set; }
+    public List<Personajes> data { get; set; }         // lista de personajes (0-9)
 
     public Data()
     {
@@ -21,10 +21,10 @@ public class Data
 
 public class Personajes
 {
-    public int character_id;
-    public string character_name;
-    //public string url_ref;
-    public List<Versiones> graphic_lines; 
+    public int character_id { get; set; }
+    public string character_name { get; set; }
+    //public string url_ref { get; set; }
+    public List<Versiones> graphic_lines { get; set; }
 
     public Personajes()
     {
@@ -41,12 +41,12 @@ public class Personajes
 
 public class Versiones
 {
-    public int graphic_line_id;
-    public string graphic_line_name;
-    public string graphic_line_image;
-    public List<Partes> graphic_line_parts;
-    public List<Emociones> emociones;
-    public List<Accesorios> accesorios;
+    public int graphic_line_id { get; set; }
+    public string graphic_line_name { get; set; }
+    public string graphic_line_image { get; set; }
+    public List<Partes> graphic_line_parts { get; set; }
+    public List<Emociones> emociones { get; set; }
+    public List<Accesorios> accesorios { get; set; }
 
     public Versiones()
     {
@@ -65,16 +65,16 @@ public class Versiones
 
 public class Partes
 {
-    public int part_id;
-    public string part_name;
-    public string part_svg;
-    public Color color;
+    public int part_id { get; set; }
+    public string part_name { get; set; }
+    public string part_svg { get; set; }
+    public string color { get; set; }
 
     public Partes()
     {
     }
 
-    public Partes(int idP, string name, string imagen, Color color)
+    public Partes(int idP, string name, string imagen, string color)
     {
         this.part_id = idP;
         this.part_name = name;
@@ -85,8 +85,8 @@ public class Partes
 
 public class Emociones
 {
-    public int emot_id;
-    public string emot_svg;
+    public int emot_id { get; set; }
+    public string emot_svg { get; set; }
 
     public Emociones()
     {
@@ -105,8 +105,8 @@ public class Emociones
 
 public class Accesorios
 {
-    public int acc_id;
-    public string acc_svg;
+    public int acc_id { get; set; }
+    public string acc_svg { get; set; }
 
     public Accesorios()
     {
