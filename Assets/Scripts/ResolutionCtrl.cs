@@ -33,7 +33,7 @@ public class ResolutionCtrl : MonoBehaviour
             uptadateRatios(0, 5.21f);
         } else if (rounded == 1.33f || rounded == 1.32f || rounded == 1.34f) {
             uptadateRatios(0, 6.77f);
-        } else if (rounded == 1.85f || rounded == 2) {
+        } else if (rounded == 1.85f || rounded == 2 || rounded == 2.17f || rounded == 2.16f) {
             uptadateRatios(1,5);
         } else if (rounded == 2.11f) { // resoluciones 2280 * 1080
             uptadateRatios(1, 4.75f);
